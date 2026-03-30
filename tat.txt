@@ -1,5 +1,95 @@
-1. Identify what is missing compared to this master spec:
-2. Show me a gap analysis — what exists vs what still needs building
-3. Ask me which sprint to continue from
+Sprint 2 is complete and committed. Now begin Sprint 3.
 
-Do not write any code yet. Just audit and report.
+Read EduBridge_Rwanda_Master_Prompt.md before starting. Work in this exact order:
+
+═══════════════════════════════════════════
+TASK 1: compare.php — Side-by-side career comparison
+═══════════════════════════════════════════
+- URL: compare.php?a=CAREER_ID_1&b=CAREER_ID_2
+- Two-column layout comparing both careers side by side
+- Show for each career:
+    • Career name (respects current language session)
+    • Match score (if coming from results — pass as ?score_a=X&score_b=Y)
+    • Demand badge (reuse getDemandBadge() helper)
+    • Required skills (as tag pills)
+    • Salary range
+    • Education pathways (institution name, program, type, location)
+- On mobile: stack vertically, Career A on top, Career B below
+- "← Back to Results" button at top
+- "☆ Save" bookmark button under each career (reuse toggle_bookmark.php)
+- On results.php: add a "Compare" checkbox to each career card
+    • Max 2 selectable at once (disable others when 2 are checked)
+    • Sticky bottom bar appears when 2 are selected:
+      "Compare [Career A] vs [Career B] →" button
+    • Button links to compare.php?a=X&b=Y&score_a=XX&score_b=YY
+
+═══════════════════════════════════════════
+TASK 2: School-scoped Admin Dashboard
+═══════════════════════════════════════════
+- admin/index.php currently shows global stats — fix this:
+- school_admin role: query filtered by their own school_name only
+- system_admin role: sees all schools (global view, unchanged)
+- Add a school selector dropdown for system_admin to filter by school
+- Add these 4 data panels to admin/index.php:
+    1. Top 5 careers students want (rank 1 results, filtered by school)
+    2. Grade distribution (S1–S6 breakdown, how many students per grade)
+    3. Interest clusters (% per RIASEC category among this school)
+    4. Total assessments completed this month
+- All charts must be CSS-only bar charts (no JS chart library, no Canvas)
+  Pattern: <div class="bar" style="width: <?= $pct ?>%"></div>
+- All data must be anonymized — no student names visible to admin
+
+SQL for top careers (school-scoped):
+  SELECT c.name_en, c.name_kn, c.demand_level, COUNT(*) AS interest_count
+  FROM career_matches cm
+  JOIN careers c ON cm.career_id = c.id
+  JOIN user_assessments ua ON cm.assessment_id = ua.id
+  JOIN users u ON ua.user_id = u.id
+  WHERE u.school_name = :school AND cm.rank = 1
+  GROUP BY c.id
+  ORDER BY interest_count DESC
+  LIMIT 5;
+
+═══════════════════════════════════════════
+TASK 3: bookmarks.php — My Saved Careers page
+═══════════════════════════════════════════
+- Already created in Sprint 2 — verify and enhance it:
+- Show all bookmarked careers as cards (same card style as results.php)
+- Each card shows: name, demand badge, match score (if available), 
+  salary range, "View Details" link, "Unsave" button
+- If no bookmarks: friendly empty state message in current language
+- "Compare" checkboxes on cards (same logic as results.php)
+- Link to bookmarks.php from dashboard.php and the top navigation
+
+═══════════════════════════════════════════
+TASK 4: Dashboard — My Journey completeness
+═══════════════════════════════════════════
+- dashboard.php must show all 4 sections from SPEC.md Feature 7:
+    1. Welcome back, [Name] — with school name subtitle
+    2. Assessment status card:
+       - Never taken → "Start Your Assessment" CTA (primary button)
+       - In progress → "Continue Assessment" with % progress
+       - Completed → "View My Results" + date completed
+    3. Top match preview: show career #1 with its demand badge and 
+       match percentage — link to results.php
+    4. Bookmarked careers: show last 3 saved careers as small cards,
+       "View All Saved →" link to bookmarks.php
+- "Retake Assessment" button only visible when status = completed
+
+═══════════════════════════════════════════
+RULES FOR THIS SPRINT
+═══════════════════════════════════════════
+- Keep flat folder structure (do not restructure to public/src/)
+- PDO prepared statements only — no string concatenation in SQL
+- htmlspecialchars() on ALL user-supplied output
+- Respect $_SESSION['language'] for EN/RW on every new string
+- Any new UI strings must be added to lang/en.php AND lang/rw.php
+- Reuse existing CSS classes and getDemandBadge() helper
+- No new JS libraries — Vanilla JS only
+
+Do TASK 1 first. Show me the completed compare.php before moving to TASK 2.
+Commit after each task using conventional commits:
+  feat: add side-by-side career comparison page
+  feat: school-scoped admin dashboard with CSS charts
+  feat: enhance bookmarks page with compare support
+  feat: complete My Journey dashboard sections
