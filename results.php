@@ -126,6 +126,9 @@ require_once 'includes/header.php';
                                     <span class="match-badge"><?php echo number_format($match['match_percentage'], 0); ?>%</span>
                                 </div>
                                 <h5 class="card-title"><?php echo getLocalizedField($match, 'title'); ?></h5>
+                                <div class="mb-2">
+                                    <?php echo getDemandBadge($match['demand_level'] ?? 'growing'); ?>
+                                </div>
                                 <p class="card-text small text-muted">
                                     <?php echo substr(getLocalizedField($match, 'description'), 0, 100); ?>...
                                 </p>

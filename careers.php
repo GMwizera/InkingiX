@@ -20,7 +20,7 @@ $categoryFilter = isset($_GET['category']) ? intval($_GET['category']) : 0;
 $searchTerm = isset($_GET['search']) ? sanitize($_GET['search']) : '';
 
 // Build query
-$sql = "SELECT c.*, cc.name_en as category_name, cc.code as category_code
+$sql = "SELECT c.*, cc.name_en as category_name, cc.code as category_code, c.demand_level
         FROM careers c
         JOIN career_categories cc ON c.primary_category_id = cc.id
         WHERE c.is_active = 1";
@@ -114,6 +114,7 @@ require_once 'includes/header.php';
                     <span class="badge category-badge-<?php echo $career['category_code']; ?>">
                         <?php echo $career['category_name']; ?>
                     </span>
+                    <?php echo getDemandBadge($career['demand_level'] ?? 'growing'); ?>
                 </div>
                 <h5 class="card-title"><?php echo getLocalizedField($career, 'title'); ?></h5>
                 <p class="card-text text-muted small">

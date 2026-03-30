@@ -61,6 +61,18 @@ $stmt = $db->query("
     LIMIT 5
 ");
 $schoolStats = $stmt->fetchAll();
+
+// Top careers by interest
+$stmt = $db->query("
+    SELECT c.id, c.title_en, c.title_rw, c.demand_level, COUNT(cm.id) as interest_count
+    FROM careers c
+    LEFT JOIN career_matches cm ON c.id = cm.career_id
+    WHERE c.is_active = 1
+    GROUP BY c.id
+    ORDER BY interest_count DESC
+    LIMIT 5
+");
+$topCareers = $stmt->fetchAll();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -265,24 +277,56 @@ $schoolStats = $stmt->fetchAll();
                     </div>
                 </div>
 
-                <!-- Top Schools -->
-                <div class="card mb-4">
-                    <div class="card-header">
-                        <h5 class="mb-0">Top Schools by Assessments</h5>
-                    </div>
-                    <div class="card-body">
-                        <?php foreach ($schoolStats as $school): ?>
-                        <div class="mb-3">
-                            <div class="d-flex justify-content-between mb-1">
-                                <span><?php echo htmlspecialchars($school['school_name']); ?></span>
-                                <span class="badge bg-primary"><?php echo $school['assessment_count']; ?></span>
+                <div class="row">
+                    <!-- Top Schools -->
+                    <div class="col-md-6 mb-4">
+                        <div class="card h-100">
+                            <div class="card-header">
+                                <h5 class="mb-0"><i class="fas fa-school me-2"></i>Top Schools by Assessments</h5>
                             </div>
-                            <div class="progress" style="height: 10px;">
-                                <?php $percentage = ($school['assessment_count'] / max(array_column($schoolStats, 'assessment_count'))) * 100; ?>
-                                <div class="progress-bar" style="width: <?php echo $percentage; ?>%"></div>
+                            <div class="card-body">
+                                <?php foreach ($schoolStats as $school): ?>
+                                <div class="mb-3">
+                                    <div class="d-flex justify-content-between mb-1">
+                                        <span><?php echo htmlspecialchars($school['school_name']); ?></span>
+                                        <span class="badge bg-primary"><?php echo $school['assessment_count']; ?></span>
+                                    </div>
+                                    <div class="progress" style="height: 10px;">
+                                        <?php $percentage = ($school['assessment_count'] / max(array_column($schoolStats, 'assessment_count'))) * 100; ?>
+                                        <div class="progress-bar" style="width: <?php echo $percentage; ?>%"></div>
+                                    </div>
+                                </div>
+                                <?php endforeach; ?>
                             </div>
                         </div>
-                        <?php endforeach; ?>
+                    </div>
+
+                    <!-- Top Careers -->
+                    <div class="col-md-6 mb-4">
+                        <div class="card h-100">
+                            <div class="card-header">
+                                <h5 class="mb-0"><i class="fas fa-star me-2"></i>Top Careers by Interest</h5>
+                            </div>
+                            <div class="card-body">
+                                <?php if (!empty($topCareers)): ?>
+                                <div class="list-group list-group-flush">
+                                    <?php foreach ($topCareers as $career): ?>
+                                    <div class="list-group-item d-flex justify-content-between align-items-center px-0">
+                                        <div>
+                                            <strong><?php echo htmlspecialchars(getLocalizedField($career, 'title')); ?></strong>
+                                            <div class="mt-1">
+                                                <?php echo getDemandBadge($career['demand_level'] ?? 'growing'); ?>
+                                            </div>
+                                        </div>
+                                        <span class="badge bg-secondary"><?php echo $career['interest_count']; ?> matches</span>
+                                    </div>
+                                    <?php endforeach; ?>
+                                </div>
+                                <?php else: ?>
+                                <p class="text-muted mb-0">No career data available yet.</p>
+                                <?php endif; ?>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </main>

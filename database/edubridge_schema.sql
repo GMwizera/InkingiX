@@ -82,6 +82,7 @@ CREATE TABLE IF NOT EXISTS careers (
     education_path_rw TEXT,
     salary_range_min INT,
     salary_range_max INT,
+    demand_level ENUM('low', 'growing', 'high') DEFAULT 'growing',
     job_outlook_en TEXT,
     job_outlook_rw TEXT,
     work_environment_en TEXT,

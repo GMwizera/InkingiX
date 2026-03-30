@@ -258,7 +258,7 @@ function getCareerMatches($assessmentId) {
     $db = getDBConnection();
     $stmt = $db->prepare("
         SELECT cm.*, c.title_en, c.title_rw, c.description_en, c.description_rw,
-               c.salary_range_min, c.salary_range_max
+               c.salary_range_min, c.salary_range_max, c.demand_level
         FROM career_matches cm
         JOIN careers c ON cm.career_id = c.id
         WHERE cm.assessment_id = ?
@@ -267,6 +267,43 @@ function getCareerMatches($assessmentId) {
     ");
     $stmt->execute([$assessmentId]);
     return $stmt->fetchAll();
+}
+
+/**
+ * Get demand badge HTML for a career
+ * @param string $demandLevel 'low', 'growing', or 'high'
+ * @param bool $showIcon Whether to show an icon
+ * @return string HTML for the badge
+ */
+function getDemandBadge($demandLevel, $showIcon = true) {
+    $levels = [
+        'high' => [
+            'class' => 'badge-demand-high',
+            'icon' => 'fa-arrow-trend-up',
+            'label_en' => 'High Demand',
+            'label_rw' => 'Ibasabwa cyane'
+        ],
+        'growing' => [
+            'class' => 'badge-demand-growing',
+            'icon' => 'fa-chart-line',
+            'label_en' => 'Growing',
+            'label_rw' => 'Iriyongera'
+        ],
+        'low' => [
+            'class' => 'badge-demand-low',
+            'icon' => 'fa-arrow-trend-down',
+            'label_en' => 'Low Demand',
+            'label_rw' => 'Ibasabwa gike'
+        ]
+    ];
+
+    $level = $levels[$demandLevel] ?? $levels['growing'];
+    $lang = getCurrentLanguage();
+    $label = ($lang === 'rw') ? $level['label_rw'] : $level['label_en'];
+
+    $iconHtml = $showIcon ? '<i class="fas ' . $level['icon'] . '"></i>' : '';
+
+    return '<span class="badge badge-demand ' . $level['class'] . '">' . $iconHtml . ' ' . htmlspecialchars($label) . '</span>';
 }
 
 /**

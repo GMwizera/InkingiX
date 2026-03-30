@@ -52,7 +52,7 @@ $institutions = $stmt->fetchAll();
 
 // Get related careers (same category)
 $stmt = $db->prepare("
-    SELECT c.id, c.title_en, c.title_rw, c.salary_range_min, c.salary_range_max
+    SELECT c.id, c.title_en, c.title_rw, c.salary_range_min, c.salary_range_max, c.demand_level
     FROM careers c
     WHERE c.primary_category_id = ? AND c.id != ? AND c.is_active = 1
     LIMIT 4
@@ -79,9 +79,12 @@ require_once 'includes/header.php';
         <div class="card mb-4">
             <div class="card-body">
                 <div class="d-flex justify-content-between align-items-start mb-3">
-                    <span class="badge category-badge-<?php echo $career['category_code']; ?> fs-6">
-                        <i class="fas fa-tag me-1"></i><?php echo getLocalizedField($career, 'category_name'); ?>
-                    </span>
+                    <div class="d-flex gap-2 flex-wrap">
+                        <span class="badge category-badge-<?php echo $career['category_code']; ?> fs-6">
+                            <i class="fas fa-tag me-1"></i><?php echo getLocalizedField($career, 'category_name'); ?>
+                        </span>
+                        <?php echo getDemandBadge($career['demand_level'] ?? 'growing'); ?>
+                    </div>
                 </div>
                 <h1 class="mb-3"><?php echo getLocalizedField($career, 'title'); ?></h1>
                 <p class="lead text-muted"><?php echo getLocalizedField($career, 'description'); ?></p>
@@ -227,7 +230,10 @@ require_once 'includes/header.php';
                 <?php foreach ($relatedCareers as $related): ?>
                 <a href="career.php?id=<?php echo $related['id']; ?>" class="list-group-item list-group-item-action">
                     <div class="d-flex justify-content-between align-items-center">
-                        <span><?php echo getLocalizedField($related, 'title'); ?></span>
+                        <div>
+                            <span class="d-block"><?php echo getLocalizedField($related, 'title'); ?></span>
+                            <?php echo getDemandBadge($related['demand_level'] ?? 'growing', false); ?>
+                        </div>
                         <i class="fas fa-chevron-right text-muted"></i>
                     </div>
                 </a>

@@ -1000,6 +1000,41 @@ h6, .h6 { font-size: var(--body-2); font-weight: 600; line-height: 1.4; }
     color: var(--text-secondary);
 }
 
+/* Demand Level Badges */
+.badge-demand {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.badge-demand-high,
+.badge-high {
+    background: #16a34a;
+    color: white;
+}
+
+.badge-demand-growing,
+.badge-growing {
+    background: #d97706;
+    color: white;
+}
+
+.badge-demand-low,
+.badge-low {
+    background: #dc2626;
+    color: white;
+}
+
+.badge-demand i {
+    font-size: 10px;
+}
+
 /* ============================================
    Forms
    ============================================ */
