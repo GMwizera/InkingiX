@@ -314,42 +314,36 @@ INSERT INTO career_institutions (career_id, institution_id, program_name_en, dur
 
 -- Assessment Questions (30 questions covering RIASEC categories)
 INSERT INTO assessment_questions (question_en, question_rw, category_id, weight, order_number) VALUES
--- Realistic (R) - Category 1
 ('I enjoy fixing or repairing things with my hands.', 'Nkunda gukosora ibintu nkoresheje intoki zanjye.', 1, 1, 1),
 ('I like working with tools, machines, or equipment.', 'Nkunda gukora n''ibikoresho, imashini, cyangwa ibikoresho.', 1, 1, 2),
 ('I prefer practical activities over theoretical discussions.', 'Nkunda ibikorwa bigaragara kuruta ibiganiro by''ibitekerezo.', 1, 1, 3),
 ('I enjoy building or constructing things.', 'Nkunda kubaka cyangwa gukora ibintu.', 1, 1, 4),
 ('I like working outdoors or in nature.', 'Nkunda gukora hanze cyangwa mu ibidukikije.', 1, 1, 5),
 
--- Investigative (I) - Category 2
 ('I enjoy solving complex problems and puzzles.', 'Nkunda gukemura ibibazo bigoye n''imikino yo gutekereza.', 2, 1, 6),
 ('I like conducting research to discover new information.', 'Nkunda gukora ubushakashatsi kugira ngo menye ibintu bishya.', 2, 1, 7),
 ('I am curious about how things work.', 'Ndashishikajwe no kumenya uko ibintu bikora.', 2, 1, 8),
 ('I prefer analyzing data to make decisions.', 'Nkunda gusesengura amakuru mbere yo gufata ibyemezo.', 2, 1, 9),
 ('I enjoy studying science, mathematics, or technology.', 'Nkunda kwiga ubumenyi, imibare, cyangwa ikoranabuhanga.', 2, 1, 10),
 
--- Artistic (A) - Category 3
 ('I enjoy expressing myself through art, music, or writing.', 'Nkunda kwiyerekana binyuze mu buhanzi, umuziki, cyangwa kwandika.', 3, 1, 11),
 ('I like creating new and original ideas or designs.', 'Nkunda gukora ibitekerezo bishya n''amashusho.', 3, 1, 12),
 ('I appreciate beauty and aesthetics in my environment.', 'Nkunda ubwiza mu bidukikije.', 3, 1, 13),
 ('I prefer activities that allow creativity and imagination.', 'Nkunda ibikorwa binshoboza kuba umuhanzi no gutekereza.', 3, 1, 14),
 ('I enjoy performing or presenting to others.', 'Nkunda gukinira cyangwa kwerekana imbere y''abandi.', 3, 1, 15),
 
--- Social (S) - Category 4
 ('I enjoy helping and supporting other people.', 'Nkunda gufasha no gushyigikira abandi bantu.', 4, 1, 16),
 ('I like teaching or explaining things to others.', 'Nkunda kwigisha cyangwa gusobanurira abandi ibintu.', 4, 1, 17),
 ('I am interested in understanding people''s feelings and problems.', 'Nshishikajwe no kumva uko abandi bantu bumva n''ibibazo byabo.', 4, 1, 18),
 ('I prefer working in teams rather than alone.', 'Nkunda gukora mu itsinda kuruta gukora wenyine.', 4, 1, 19),
 ('I enjoy volunteering or community service activities.', 'Nkunda gukora ku bushake cyangwa ibikorwa byo gufasha abaturage.', 4, 1, 20),
 
--- Enterprising (E) - Category 5
 ('I enjoy leading and directing other people.', 'Nkunda kuyobora no gutanga amabwiriza abandi bantu.', 5, 1, 21),
 ('I like persuading or convincing others of my ideas.', 'Nkunda kwemeza cyangwa guhamya abandi ibitekerezo byanjye.', 5, 1, 22),
 ('I am interested in starting my own business someday.', 'Nshishikajwe no gutangira ubucuruzi bwanjye umunsi umwe.', 5, 1, 23),
 ('I enjoy taking risks to achieve goals.', 'Nkunda gufata ibyago kugira ngo ngere ku ntego.', 5, 1, 24),
 ('I prefer competitive activities and challenges.', 'Nkunda ibikorwa by''amarushanwa n''imbogamizi.', 5, 1, 25),
 
--- Conventional (C) - Category 6
 ('I like organizing and keeping things in order.', 'Nkunda gutunganya no kubika ibintu mu buryo.', 6, 1, 26),
 ('I enjoy working with numbers, data, and records.', 'Nkunda gukora n''imibare, amakuru, n''inyandiko.', 6, 1, 27),
 ('I prefer following clear instructions and procedures.', 'Nkunda gukurikiza amabwiriza n''inzira zigaragara.', 6, 1, 28),
