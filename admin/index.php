@@ -288,12 +288,12 @@ $categoryColors = [
         }
 
         /* Grade distribution colors */
-        .grade-s1 { background: linear-gradient(90deg, #667eea 0%, #764ba2 100%); }
-        .grade-s2 { background: linear-gradient(90deg, #f093fb 0%, #f5576c 100%); }
-        .grade-s3 { background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%); }
-        .grade-s4 { background: linear-gradient(90deg, #43e97b 0%, #38f9d7 100%); }
-        .grade-s5 { background: linear-gradient(90deg, #fa709a 0%, #fee140 100%); }
-        .grade-s6 { background: linear-gradient(90deg, #a18cd1 0%, #fbc2eb 100%); }
+        .grade-s1 { background: #667eea; }
+        .grade-s2 { background: #f093fb; }
+        .grade-s3 { background: #4facfe; }
+        .grade-s4 { background: #43e97b; }
+        .grade-s5 { background: #fa709a; }
+        .grade-s6 { background: #a18cd1; }
 
         /* Interest cluster donut-style display */
         .interest-cluster-item {
@@ -344,7 +344,7 @@ $categoryColors = [
 
         /* Monthly stat highlight */
         .stat-highlight {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #667eea;
             color: white;
             border-radius: 12px;
             padding: 20px;
@@ -377,21 +377,60 @@ $categoryColors = [
     <nav class="navbar navbar-dark bg-dark">
         <div class="container-fluid">
             <a class="navbar-brand" href="index.php">
-                <i class="fas fa-cog me-2"></i><?php echo SITE_NAME; ?> <?php echo __('nav_admin'); ?>
+                <i class="fas fa-shield-alt me-2"></i><?php echo SITE_NAME; ?> <?php echo __('nav_admin'); ?>
             </a>
-            <div class="d-flex align-items-center">
-                <span class="text-light me-3">
-                    <i class="fas fa-user me-1"></i><?php echo htmlspecialchars($currentUser['first_name']); ?>
-                    <?php if ($currentUser['role'] === 'school_admin'): ?>
-                    <small class="opacity-75">(<?php echo htmlspecialchars($currentUser['school_name']); ?>)</small>
-                    <?php endif; ?>
-                </span>
-                <a href="../index.php" class="btn btn-outline-light btn-sm me-2">
-                    <i class="fas fa-home me-1"></i><?php echo __('nav_home'); ?>
-                </a>
-                <a href="../logout.php" class="btn btn-danger btn-sm">
-                    <i class="fas fa-sign-out-alt me-1"></i><?php echo __('nav_logout'); ?>
-                </a>
+            <div class="d-flex align-items-center gap-3">
+                <!-- Language Switcher -->
+                <div class="dropdown">
+                    <button class="btn btn-outline-light btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                        <i class="fas fa-globe me-1"></i>
+                        <?php echo getCurrentLanguage() === 'en' ? 'EN' : 'RW'; ?>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item <?php echo getCurrentLanguage() === 'en' ? 'active' : ''; ?>" href="?lang=en<?php echo $selectedSchool ? '&school=' . urlencode($selectedSchool) : ''; ?>">
+                            <i class="fas fa-check me-2 <?php echo getCurrentLanguage() === 'en' ? '' : 'invisible'; ?>"></i>English
+                        </a></li>
+                        <li><a class="dropdown-item <?php echo getCurrentLanguage() === 'rw' ? 'active' : ''; ?>" href="?lang=rw<?php echo $selectedSchool ? '&school=' . urlencode($selectedSchool) : ''; ?>">
+                            <i class="fas fa-check me-2 <?php echo getCurrentLanguage() === 'rw' ? '' : 'invisible'; ?>"></i>Kinyarwanda
+                        </a></li>
+                    </ul>
+                </div>
+
+                <!-- Admin Profile Dropdown -->
+                <div class="dropdown">
+                    <button class="btn btn-outline-light btn-sm dropdown-toggle d-flex align-items-center" type="button" data-bs-toggle="dropdown">
+                        <div class="bg-light text-dark rounded-circle d-flex align-items-center justify-content-center me-2" style="width: 28px; height: 28px; font-size: 0.75rem; font-weight: 600;">
+                            <?php echo strtoupper(substr($currentUser['first_name'], 0, 1) . substr($currentUser['last_name'], 0, 1)); ?>
+                        </div>
+                        <?php echo htmlspecialchars($currentUser['first_name']); ?>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li class="dropdown-header">
+                            <strong><?php echo htmlspecialchars($currentUser['first_name'] . ' ' . $currentUser['last_name']); ?></strong>
+                            <br><small class="text-muted"><?php echo $currentUser['role'] === 'system_admin' ? __('admin_system_admin') : __('admin_school_admin'); ?></small>
+                            <?php if ($currentUser['role'] === 'school_admin' && !empty($currentUser['school_name'])): ?>
+                            <br><small class="text-muted"><?php echo htmlspecialchars($currentUser['school_name']); ?></small>
+                            <?php endif; ?>
+                        </li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li>
+                            <a class="dropdown-item" href="../profile.php">
+                                <i class="fas fa-user me-2"></i><?php echo __('nav_profile'); ?>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="../index.php">
+                                <i class="fas fa-home me-2"></i><?php echo __('nav_home'); ?>
+                            </a>
+                        </li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li>
+                            <a class="dropdown-item text-danger" href="../logout.php">
+                                <i class="fas fa-sign-out-alt me-2"></i><?php echo __('nav_logout'); ?>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </div>
     </nav>
@@ -402,19 +441,28 @@ $categoryColors = [
             <nav class="col-md-3 col-lg-2 d-md-block admin-sidebar py-3">
                 <div class="position-sticky">
                     <ul class="nav flex-column">
+                        <!-- Dashboard - Both roles -->
                         <li class="nav-item">
                             <a class="nav-link active" href="index.php">
                                 <i class="fas fa-tachometer-alt"></i> <?php echo __('admin_dashboard'); ?>
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="users.php">
-                                <i class="fas fa-users"></i> <?php echo __('admin_users'); ?>
-                            </a>
-                        </li>
+
+                        <?php if ($currentUser['role'] === 'system_admin'): ?>
+                        <!-- System Admin Navigation -->
                         <li class="nav-item">
                             <a class="nav-link" href="careers.php">
                                 <i class="fas fa-briefcase"></i> <?php echo __('nav_careers'); ?>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="reports.php">
+                                <i class="fas fa-chart-bar"></i> <?php echo __('admin_reports'); ?>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="users.php">
+                                <i class="fas fa-users"></i> <?php echo __('admin_users'); ?>
                             </a>
                         </li>
                         <li class="nav-item">
@@ -427,15 +475,17 @@ $categoryColors = [
                                 <i class="fas fa-question-circle"></i> <?php echo __('admin_questions'); ?>
                             </a>
                         </li>
+
+                        <?php else: ?>
+                        <!-- School Admin Navigation -->
                         <li class="nav-item">
                             <a class="nav-link" href="reports.php">
                                 <i class="fas fa-chart-bar"></i> <?php echo __('admin_reports'); ?>
                             </a>
                         </li>
-                        <?php if ($currentUser['role'] === 'system_admin'): ?>
                         <li class="nav-item">
-                            <a class="nav-link" href="settings.php">
-                                <i class="fas fa-cog"></i> <?php echo __('admin_settings'); ?>
+                            <a class="nav-link" href="users.php">
+                                <i class="fas fa-users"></i> <?php echo __('admin_students', 'Students'); ?>
                             </a>
                         </li>
                         <?php endif; ?>

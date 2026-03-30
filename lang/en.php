@@ -200,6 +200,7 @@ return [
     // Admin Dashboard
     'admin_dashboard' => 'Dashboard',
     'admin_users' => 'Users',
+    'admin_students' => 'Students',
     'admin_questions' => 'Questions',
     'admin_reports' => 'Reports',
     'admin_settings' => 'Settings',

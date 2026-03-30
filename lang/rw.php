@@ -200,6 +200,7 @@ return [
     // Admin Dashboard
     'admin_dashboard' => 'Ikibaho',
     'admin_users' => 'Abakoresha',
+    'admin_students' => 'Abanyeshuri',
     'admin_questions' => 'Ibibazo',
     'admin_reports' => 'Raporo',
     'admin_settings' => 'Igenamiterere',

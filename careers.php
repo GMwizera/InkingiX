@@ -49,7 +49,12 @@ $careers = $stmt->fetchAll();
 // Get categories for filter
 $categories = getCareerCategories();
 
-require_once 'includes/header.php';
+// Use sidebar for logged-in users, top navbar for guests
+if (isLoggedIn()) {
+    require_once 'includes/header-dashboard.php';
+} else {
+    require_once 'includes/header.php';
+}
 ?>
 
 <div class="d-flex justify-content-between align-items-center mb-4">
@@ -140,4 +145,11 @@ require_once 'includes/header.php';
 </div>
 <?php endif; ?>
 
-<?php require_once 'includes/footer.php'; ?>
+<?php
+// Use matching footer for the header
+if (isLoggedIn()) {
+    require_once 'includes/footer-dashboard.php';
+} else {
+    require_once 'includes/footer.php';
+}
+?>

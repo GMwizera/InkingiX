@@ -1,4 +1,8 @@
 <?php
+/**
+ * EduBridge Rwanda - Student Dashboard Header
+ * Sidebar navigation for logged-in students
+ */
 require_once __DIR__ . '/functions.php';
 $currentUser = getCurrentUser();
 $currentLang = getCurrentLanguage();
@@ -32,43 +36,68 @@ $initials = strtoupper(substr($currentUser['first_name'], 0, 1) . substr($curren
         <!-- Sidebar Navigation -->
         <aside class="sidebar">
             <div class="sidebar-header">
-                <div class="logo">
+                <a href="index.php" class="logo" title="<?php echo SITE_NAME; ?>">
                     <div class="logo-icon">
                         <i class="fas fa-graduation-cap"></i>
                     </div>
-                </div>
+                    <span class="logo-text">EduBridge</span>
+                </a>
             </div>
 
             <nav class="sidebar-nav">
-                <a href="dashboard.php" class="nav-item <?php echo $currentPage === 'dashboard' ? 'active' : ''; ?>" title="<?php echo __('nav_dashboard', 'Dashboard'); ?>">
-                    <i class="fas fa-th-large"></i>
+                <!-- My Journey / Dashboard -->
+                <a href="dashboard.php" class="nav-item <?php echo $currentPage === 'dashboard' ? 'active' : ''; ?>" title="<?php echo __('nav_my_journey', 'My Journey'); ?>">
+                    <i class="fas fa-road"></i>
+                    <span class="nav-label"><?php echo __('nav_my_journey', 'My Journey'); ?></span>
                 </a>
+
+                <!-- Assessment -->
                 <a href="assessment.php" class="nav-item <?php echo $currentPage === 'assessment' ? 'active' : ''; ?>" title="<?php echo __('nav_assessment', 'Assessment'); ?>">
                     <i class="fas fa-clipboard-list"></i>
+                    <span class="nav-label"><?php echo __('nav_assessment', 'Assessment'); ?></span>
                 </a>
-                <a href="results.php" class="nav-item <?php echo $currentPage === 'results' ? 'active' : ''; ?>" title="<?php echo __('nav_results', 'Results'); ?>">
-                    <i class="fas fa-chart-pie"></i>
-                </a>
-                <a href="careers.php" class="nav-item <?php echo $currentPage === 'careers' || $currentPage === 'career' ? 'active' : ''; ?>" title="<?php echo __('nav_careers', 'Careers'); ?>">
+
+                <!-- Careers -->
+                <a href="careers.php" class="nav-item <?php echo $currentPage === 'careers' || $currentPage === 'career' || $currentPage === 'compare' ? 'active' : ''; ?>" title="<?php echo __('nav_careers', 'Careers'); ?>">
                     <i class="fas fa-briefcase"></i>
+                    <span class="nav-label"><?php echo __('nav_careers', 'Careers'); ?></span>
                 </a>
+
+                <!-- Institutions -->
                 <a href="institutions.php" class="nav-item <?php echo $currentPage === 'institutions' ? 'active' : ''; ?>" title="<?php echo __('nav_institutions', 'Institutions'); ?>">
                     <i class="fas fa-university"></i>
+                    <span class="nav-label"><?php echo __('nav_institutions', 'Institutions'); ?></span>
                 </a>
-                <a href="faq.php" class="nav-item <?php echo $currentPage === 'faq' ? 'active' : ''; ?>" title="FAQ">
-                    <i class="fas fa-question-circle"></i>
+
+                <!-- Saved / Bookmarks -->
+                <a href="bookmarks.php" class="nav-item <?php echo $currentPage === 'bookmarks' ? 'active' : ''; ?>" title="<?php echo __('nav_bookmarks', 'Saved'); ?>">
+                    <i class="fas fa-bookmark"></i>
+                    <span class="nav-label"><?php echo __('nav_bookmarks', 'Saved'); ?></span>
                 </a>
             </nav>
 
             <div class="sidebar-footer">
+                <!-- Profile -->
                 <a href="profile.php" class="nav-item <?php echo $currentPage === 'profile' ? 'active' : ''; ?>" title="<?php echo __('nav_profile', 'Profile'); ?>">
-                    <i class="fas fa-cog"></i>
+                    <i class="fas fa-user"></i>
+                    <span class="nav-label"><?php echo __('nav_profile', 'Profile'); ?></span>
                 </a>
+
+                <!-- Results -->
+                <a href="results.php" class="nav-item <?php echo $currentPage === 'results' ? 'active' : ''; ?>" title="<?php echo __('nav_results', 'Results'); ?>">
+                    <i class="fas fa-chart-pie"></i>
+                    <span class="nav-label"><?php echo __('nav_results', 'Results'); ?></span>
+                </a>
+
                 <?php if (hasRole(['school_admin', 'system_admin'])): ?>
+                <!-- Admin Panel -->
                 <a href="admin/index.php" class="nav-item" title="<?php echo __('nav_admin', 'Admin'); ?>">
                     <i class="fas fa-shield-alt"></i>
+                    <span class="nav-label"><?php echo __('nav_admin', 'Admin'); ?></span>
                 </a>
                 <?php endif; ?>
+
+                <!-- User Avatar -->
                 <a href="profile.php" class="user-avatar-sidebar" title="<?php echo htmlspecialchars($currentUser['first_name'] . ' ' . $currentUser['last_name']); ?>">
                     <?php echo $initials; ?>
                 </a>
@@ -80,38 +109,64 @@ $initials = strtoupper(substr($currentUser['first_name'], 0, 1) . substr($curren
             <!-- Header -->
             <header class="header">
                 <div class="header-left">
-                    <h1 class="page-title"><?php echo isset($pageGreeting) ? $pageGreeting : (isset($pageTitle) ? $pageTitle : 'Dashboard'); ?></h1>
-                    <p class="page-subtitle"><?php echo isset($pageSubtitle) ? $pageSubtitle : __('dashboard_subtitle', 'Explore your career discovery journey'); ?></p>
+                    <!-- Mobile menu toggle -->
+                    <button class="mobile-menu-toggle d-lg-none me-3" type="button" onclick="toggleSidebar()">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <div>
+                        <h1 class="page-title"><?php echo isset($pageGreeting) ? $pageGreeting : (isset($pageTitle) ? $pageTitle : __('nav_my_journey', 'My Journey')); ?></h1>
+                        <p class="page-subtitle"><?php echo isset($pageSubtitle) ? $pageSubtitle : __('dashboard_subtitle', 'Explore your career discovery journey'); ?></p>
+                    </div>
                 </div>
                 <div class="header-right">
-                    <div class="header-search">
-                        <input type="text" placeholder="<?php echo __('search_placeholder', 'Search careers...'); ?>" class="search-input">
-                        <button class="search-btn">
-                            <i class="fas fa-search"></i>
-                        </button>
-                    </div>
-
                     <!-- Language Switcher -->
                     <div class="dropdown">
                         <button class="header-icon-btn" data-bs-toggle="dropdown" title="<?php echo __('language', 'Language'); ?>">
-                            <i class="fas fa-globe"></i>
+                            <span class="lang-badge"><?php echo $currentLang === 'en' ? 'EN' : 'RW'; ?></span>
                         </button>
                         <ul class="dropdown-menu dropdown-menu-end">
-                            <li><a class="dropdown-item <?php echo $currentLang === 'en' ? 'active' : ''; ?>" href="?lang=en">English</a></li>
-                            <li><a class="dropdown-item <?php echo $currentLang === 'rw' ? 'active' : ''; ?>" href="?lang=rw">Kinyarwanda</a></li>
+                            <li><a class="dropdown-item <?php echo $currentLang === 'en' ? 'active' : ''; ?>" href="?lang=en">
+                                <i class="fas fa-check me-2 <?php echo $currentLang === 'en' ? '' : 'invisible'; ?>"></i>English
+                            </a></li>
+                            <li><a class="dropdown-item <?php echo $currentLang === 'rw' ? 'active' : ''; ?>" href="?lang=rw">
+                                <i class="fas fa-check me-2 <?php echo $currentLang === 'rw' ? '' : 'invisible'; ?>"></i>Kinyarwanda
+                            </a></li>
                         </ul>
                     </div>
 
-                    <!-- Notifications (placeholder) -->
-                    <button class="header-icon-btn" title="<?php echo __('notifications', 'Notifications'); ?>">
-                        <i class="fas fa-bell"></i>
-                        <span class="notification-badge"></span>
-                    </button>
-
-                    <!-- Logout -->
-                    <a href="logout.php" class="header-icon-btn" title="<?php echo __('nav_logout', 'Logout'); ?>">
-                        <i class="fas fa-sign-out-alt"></i>
-                    </a>
+                    <!-- Profile Dropdown -->
+                    <div class="dropdown">
+                        <button class="profile-dropdown-btn" data-bs-toggle="dropdown">
+                            <div class="user-avatar-header">
+                                <?php echo $initials; ?>
+                            </div>
+                            <span class="d-none d-md-inline ms-2"><?php echo htmlspecialchars($currentUser['first_name']); ?></span>
+                            <i class="fas fa-chevron-down ms-1 small"></i>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li class="dropdown-header">
+                                <strong><?php echo htmlspecialchars($currentUser['first_name'] . ' ' . $currentUser['last_name']); ?></strong>
+                                <br><small class="text-muted"><?php echo htmlspecialchars($currentUser['email']); ?></small>
+                            </li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li>
+                                <a class="dropdown-item" href="profile.php">
+                                    <i class="fas fa-user me-2"></i><?php echo __('nav_profile', 'My Profile'); ?>
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="results.php">
+                                    <i class="fas fa-chart-bar me-2"></i><?php echo __('nav_results', 'My Results'); ?>
+                                </a>
+                            </li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li>
+                                <a class="dropdown-item text-danger" href="logout.php">
+                                    <i class="fas fa-sign-out-alt me-2"></i><?php echo __('nav_logout', 'Logout'); ?>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </header>
 

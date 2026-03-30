@@ -7,29 +7,24 @@
 
     <!-- Mobile sidebar toggle -->
     <script>
-        // Mobile menu toggle
+        // Toggle sidebar function
+        function toggleSidebar() {
+            const sidebar = document.querySelector('.sidebar');
+            sidebar.classList.toggle('open');
+        }
+
+        // Close sidebar when clicking outside on mobile
         document.addEventListener('DOMContentLoaded', function() {
             const sidebar = document.querySelector('.sidebar');
+            const toggleBtn = document.querySelector('.mobile-menu-toggle');
 
-            // Add mobile menu button if on mobile
-            if (window.innerWidth <= 768) {
-                const menuBtn = document.createElement('button');
-                menuBtn.className = 'mobile-menu-btn';
-                menuBtn.innerHTML = '<i class="fas fa-bars"></i>';
-                menuBtn.style.cssText = 'position:fixed;top:20px;left:20px;z-index:1001;width:44px;height:44px;border:none;background:var(--bg-card);border-radius:var(--radius-lg);box-shadow:var(--shadow-md);cursor:pointer;';
-                document.body.appendChild(menuBtn);
-
-                menuBtn.addEventListener('click', function() {
-                    sidebar.classList.toggle('open');
-                });
-
-                // Close sidebar when clicking outside
-                document.addEventListener('click', function(e) {
-                    if (!sidebar.contains(e.target) && !menuBtn.contains(e.target)) {
+            document.addEventListener('click', function(e) {
+                if (window.innerWidth <= 768) {
+                    if (!sidebar.contains(e.target) && toggleBtn && !toggleBtn.contains(e.target)) {
                         sidebar.classList.remove('open');
                     }
-                });
-            }
+                }
+            });
         });
     </script>
 </body>

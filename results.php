@@ -56,7 +56,8 @@ $stmt = $db->prepare("
 $stmt->execute([$currentUser['id']]);
 $assessmentHistory = $stmt->fetchAll();
 
-require_once 'includes/header.php';
+// Always use sidebar for logged-in pages
+require_once 'includes/header-dashboard.php';
 ?>
 
 <div class="row">
@@ -266,7 +267,7 @@ require_once 'includes/header.php';
     bottom: 0;
     left: 0;
     right: 0;
-    background: linear-gradient(135deg, #1e3a5f 0%, #2d4a6f 100%);
+    background: #1e3a5f;
     color: white;
     padding: 0.75rem 0;
     z-index: 1000;
@@ -415,4 +416,4 @@ document.querySelectorAll('.bookmark-btn').forEach(btn => {
 });
 </script>
 
-<?php require_once 'includes/footer.php'; ?>
+<?php require_once 'includes/footer-dashboard.php'; ?>

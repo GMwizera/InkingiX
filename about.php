@@ -12,7 +12,12 @@ if (isset($_GET['lang'])) {
     exit;
 }
 
-require_once 'includes/header.php';
+// Use sidebar for logged-in users, top navbar for guests
+if (isLoggedIn()) {
+    require_once 'includes/header-dashboard.php';
+} else {
+    require_once 'includes/header.php';
+}
 ?>
 
 <!-- Hero -->
@@ -162,4 +167,11 @@ require_once 'includes/header.php';
     <?php endif; ?>
 </div>
 
-<?php require_once 'includes/footer.php'; ?>
+<?php
+// Use matching footer for the header
+if (isLoggedIn()) {
+    require_once 'includes/footer-dashboard.php';
+} else {
+    require_once 'includes/footer.php';
+}
+?>

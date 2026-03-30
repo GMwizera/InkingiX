@@ -395,7 +395,7 @@ require_once 'includes/header-dashboard.php';
         </div>
 
         <!-- Next Steps Card -->
-        <div class="sidebar-panel" style="background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);">
+        <div class="sidebar-panel" style="background: #e8f5e9;">
             <h6 class="mb-3"><i class="fas fa-lightbulb me-2 text-warning"></i><?php echo __('dashboard_next_steps', 'Suggested Next Steps'); ?></h6>
             <ul class="list-unstyled mb-0 small">
                 <?php if ($assessmentState === 'none'): ?>
@@ -449,7 +449,7 @@ require_once 'includes/header-dashboard.php';
 
 .journey-progress-fill {
     height: 100%;
-    background: linear-gradient(90deg, #2E7D5A 0%, #4ade80 100%);
+    background: #2E7D5A;
     border-radius: 4px;
     transition: width 0.5s ease-out;
 }
@@ -494,7 +494,7 @@ require_once 'includes/header-dashboard.php';
 }
 
 .milestone.completed .milestone-icon {
-    background: linear-gradient(135deg, #2E7D5A 0%, #4ade80 100%);
+    background: #2E7D5A;
     color: white;
 }
 

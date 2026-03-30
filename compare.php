@@ -77,7 +77,12 @@ $institutionsB = getCareerInstitutions($db, $careerIdB);
 $isBookmarkedA = isCareerBookmarked($careerIdA);
 $isBookmarkedB = isCareerBookmarked($careerIdB);
 
-require_once 'includes/header.php';
+// Use sidebar for logged-in users, top navbar for guests
+if (isLoggedIn()) {
+    require_once 'includes/header-dashboard.php';
+} else {
+    require_once 'includes/header.php';
+}
 ?>
 
 <style>
@@ -162,7 +167,7 @@ require_once 'includes/header.php';
     align-items: center;
     gap: 0.5rem;
     padding: 0.5rem 1rem;
-    background: linear-gradient(135deg, #dbeafe 0%, #e0e7ff 100%);
+    background: #dbeafe;
     border-radius: 8px;
     font-weight: 600;
     color: #1e40af;
@@ -497,4 +502,11 @@ document.querySelectorAll('.bookmark-btn').forEach(btn => {
 </script>
 <?php endif; ?>
 
-<?php require_once 'includes/footer.php'; ?>
+<?php
+// Use matching footer for the header
+if (isLoggedIn()) {
+    require_once 'includes/footer-dashboard.php';
+} else {
+    require_once 'includes/footer.php';
+}
+?>

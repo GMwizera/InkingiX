@@ -78,7 +78,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_assessment']))
     exit;
 }
 
-require_once 'includes/header.php';
+// Always use sidebar for logged-in pages
+require_once 'includes/header-dashboard.php';
 ?>
 
 <style>
@@ -111,7 +112,7 @@ require_once 'includes/header.php';
 
 /* Resume banner */
 .resume-banner {
-    background: linear-gradient(135deg, #dbeafe 0%, #e0e7ff 100%);
+    background: #dbeafe;
     border: 1px solid #93c5fd;
     border-radius: 12px;
     padding: 1rem 1.5rem;
@@ -124,7 +125,7 @@ require_once 'includes/header.php';
 
 /* Adaptive mode banner */
 .adaptive-banner {
-    background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+    background: #fef3c7;
     border: 1px solid #f59e0b;
     border-radius: 12px;
     padding: 1rem 1.5rem;
@@ -643,4 +644,4 @@ document.addEventListener('DOMContentLoaded', function() {
 }
 </style>
 
-<?php require_once 'includes/footer.php'; ?>
+<?php require_once 'includes/footer-dashboard.php'; ?>

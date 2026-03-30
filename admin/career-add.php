@@ -5,7 +5,7 @@
 
 require_once '../includes/functions.php';
 
-requireRole(['system_admin', 'school_admin']);
+requireRole(['system_admin']);
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     header('Location: careers.php');
