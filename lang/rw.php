@@ -137,6 +137,27 @@ return [
     'profile_language' => 'Ururimi Ukunda',
     'profile_updated' => 'Umwirondoro wahinduwe neza.',
 
+    // Compare
+    'compare_careers' => 'Gereranya Imyuga',
+    'compare_hint' => 'Hitamo imyuga 2 kugira ngo uyigereranye',
+    'compare_select_two' => 'Hitamo imyuga ibiri kugira ngo uyigereranye.',
+    'compare_career_not_found' => 'Umwe cyangwa yombi mu myuga ntabwo yabonetse.',
+    'compare_select_careers' => 'Hitamo imyuga 2 yo kugereranya',
+    'compare_select_one_more' => 'hitamo undi kugira ngo ugereranye',
+    'compare_ready' => 'Gereranya',
+    'compare_now' => 'Gereranya Nonaha',
+    'compare_different' => 'Gereranya Imyuga Itandukanye',
+    'back_to_results' => 'Subira ku bisubizo',
+    'description' => 'Ibisobanuro',
+    'required_skills' => 'Ubumenyi Busabwa',
+    'salary_range' => 'Umushahara',
+    'education_pathways' => 'Inzira z\'Amashuri',
+    'no_institutions' => 'Nta mashuri yanditse.',
+    'view_details' => 'Reba Byinshi',
+    'match' => 'Ihuza',
+    'month' => 'ukwezi',
+    'saved' => 'Byabitswe',
+
     // Footer
     'footer_description' => 'Duha abanyeshuri b\'u Rwanda imbaraga zo gushaka inzira y\'umwuga wabo binyuze mu ikoranabuhanga.',
     'footer_quick_links' => 'Amahuza Yihuse',

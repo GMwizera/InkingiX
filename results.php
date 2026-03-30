@@ -114,17 +114,31 @@ require_once 'includes/header.php';
             </div>
             <div class="card-body">
                 <?php if (!empty($careerMatches)): ?>
+                <p class="text-muted small mb-3">
+                    <i class="fas fa-balance-scale me-1"></i>
+                    <?php echo __('compare_hint', 'Select 2 careers to compare them side by side'); ?>
+                </p>
                 <div class="row g-3">
                     <?php foreach ($careerMatches as $index => $match):
                         $isBookmarked = isCareerBookmarked($match['career_id']);
                     ?>
                     <div class="col-md-6">
-                        <div class="card h-100 career-card <?php echo $index === 0 ? 'border-primary' : ''; ?>">
+                        <div class="card h-100 career-card <?php echo $index === 0 ? 'border-primary' : ''; ?>" data-career-id="<?php echo $match['career_id']; ?>">
                             <div class="card-body">
                                 <div class="d-flex justify-content-between align-items-start mb-2">
-                                    <span class="badge bg-<?php echo $index === 0 ? 'primary' : 'secondary'; ?>">
-                                        #<?php echo $index + 1; ?>
-                                    </span>
+                                    <div class="d-flex align-items-center gap-2">
+                                        <div class="form-check compare-check">
+                                            <input type="checkbox"
+                                                   class="form-check-input compare-checkbox"
+                                                   id="compare_<?php echo $match['career_id']; ?>"
+                                                   data-career-id="<?php echo $match['career_id']; ?>"
+                                                   data-career-name="<?php echo htmlspecialchars(getLocalizedField($match, 'title')); ?>"
+                                                   data-match-score="<?php echo $match['match_percentage']; ?>">
+                                        </div>
+                                        <span class="badge bg-<?php echo $index === 0 ? 'primary' : 'secondary'; ?>">
+                                            #<?php echo $index + 1; ?>
+                                        </span>
+                                    </div>
                                     <div class="d-flex align-items-center gap-2">
                                         <button type="button"
                                                 class="btn btn-sm bookmark-btn <?php echo $isBookmarked ? 'btn-warning' : 'btn-outline-secondary'; ?>"
@@ -229,7 +243,137 @@ require_once 'includes/header.php';
     </div>
 </div>
 
+<!-- Sticky Compare Bar -->
+<div id="compareBar" class="compare-bar" style="display: none;">
+    <div class="container">
+        <div class="compare-bar-content">
+            <div class="compare-bar-info">
+                <i class="fas fa-balance-scale me-2"></i>
+                <span id="compareText"><?php echo __('compare_select_careers', 'Select 2 careers to compare'); ?></span>
+            </div>
+            <a href="#" id="compareBtn" class="btn btn-primary btn-sm" style="display: none;">
+                <i class="fas fa-arrow-right me-1"></i>
+                <?php echo __('compare_now', 'Compare Now'); ?>
+            </a>
+        </div>
+    </div>
+</div>
+
+<style>
+/* Compare bar styles */
+.compare-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(135deg, #1e3a5f 0%, #2d4a6f 100%);
+    color: white;
+    padding: 0.75rem 0;
+    z-index: 1000;
+    box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.15);
+    animation: slideUp 0.3s ease-out;
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.compare-bar-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.compare-bar-info {
+    display: flex;
+    align-items: center;
+}
+
+/* Compare checkbox styling */
+.compare-check {
+    margin: 0;
+}
+
+.compare-check .form-check-input {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+}
+
+.compare-check .form-check-input:checked {
+    background-color: var(--primary, #2E7D5A);
+    border-color: var(--primary, #2E7D5A);
+}
+
+/* Highlight selected cards */
+.career-card.selected-for-compare {
+    border: 2px solid var(--primary, #2E7D5A) !important;
+    box-shadow: 0 0 0 3px rgba(46, 125, 90, 0.2);
+}
+</style>
+
 <script>
+// Compare functionality
+const selectedCareers = [];
+const compareBar = document.getElementById('compareBar');
+const compareText = document.getElementById('compareText');
+const compareBtn = document.getElementById('compareBtn');
+
+document.querySelectorAll('.compare-checkbox').forEach(checkbox => {
+    checkbox.addEventListener('change', function() {
+        const careerId = this.dataset.careerId;
+        const careerName = this.dataset.careerName;
+        const matchScore = this.dataset.matchScore;
+        const card = this.closest('.career-card');
+
+        if (this.checked) {
+            // Only allow 2 selections
+            if (selectedCareers.length >= 2) {
+                this.checked = false;
+                return;
+            }
+            selectedCareers.push({ id: careerId, name: careerName, score: matchScore });
+            card.classList.add('selected-for-compare');
+        } else {
+            const index = selectedCareers.findIndex(c => c.id === careerId);
+            if (index > -1) {
+                selectedCareers.splice(index, 1);
+            }
+            card.classList.remove('selected-for-compare');
+        }
+
+        updateCompareBar();
+    });
+});
+
+function updateCompareBar() {
+    if (selectedCareers.length === 0) {
+        compareBar.style.display = 'none';
+        return;
+    }
+
+    compareBar.style.display = 'block';
+
+    if (selectedCareers.length === 1) {
+        compareText.innerHTML = '<strong>' + selectedCareers[0].name + '</strong> — <?php echo __('compare_select_one_more', 'select 1 more to compare'); ?>';
+        compareBtn.style.display = 'none';
+    } else if (selectedCareers.length === 2) {
+        compareText.innerHTML = '<?php echo __('compare_ready', 'Compare'); ?> <strong>' + selectedCareers[0].name + '</strong> vs <strong>' + selectedCareers[1].name + '</strong>';
+        compareBtn.style.display = 'inline-flex';
+        compareBtn.href = 'compare.php?a=' + selectedCareers[0].id +
+                          '&b=' + selectedCareers[1].id +
+                          '&score_a=' + selectedCareers[0].score +
+                          '&score_b=' + selectedCareers[1].score;
+    }
+}
+
 // Bookmark toggle functionality
 document.querySelectorAll('.bookmark-btn').forEach(btn => {
     btn.addEventListener('click', async function() {
@@ -246,7 +390,6 @@ document.querySelectorAll('.bookmark-btn').forEach(btn => {
             const data = await response.json();
 
             if (data.success) {
-                // Toggle button appearance
                 if (data.is_bookmarked) {
                     btn.classList.remove('btn-outline-secondary');
                     btn.classList.add('btn-warning');
@@ -257,7 +400,6 @@ document.querySelectorAll('.bookmark-btn').forEach(btn => {
                     btn.title = '<?php echo __('bookmark_save', 'Save career'); ?>';
                 }
 
-                // Show brief feedback
                 const originalHTML = btn.innerHTML;
                 btn.innerHTML = '<i class="fas fa-check"></i>';
                 setTimeout(() => {

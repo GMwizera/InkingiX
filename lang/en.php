@@ -137,6 +137,27 @@ return [
     'profile_language' => 'Preferred Language',
     'profile_updated' => 'Profile updated successfully.',
 
+    // Compare
+    'compare_careers' => 'Compare Careers',
+    'compare_hint' => 'Select 2 careers to compare them side by side',
+    'compare_select_two' => 'Please select two careers to compare.',
+    'compare_career_not_found' => 'One or both careers not found.',
+    'compare_select_careers' => 'Select 2 careers to compare',
+    'compare_select_one_more' => 'select 1 more to compare',
+    'compare_ready' => 'Compare',
+    'compare_now' => 'Compare Now',
+    'compare_different' => 'Compare Different Careers',
+    'back_to_results' => 'Back to Results',
+    'description' => 'Description',
+    'required_skills' => 'Required Skills',
+    'salary_range' => 'Salary Range',
+    'education_pathways' => 'Education Pathways',
+    'no_institutions' => 'No institutions listed yet.',
+    'view_details' => 'View Details',
+    'match' => 'Match',
+    'month' => 'month',
+    'saved' => 'Saved',
+
     // Footer
     'footer_description' => 'Empowering Rwandan students to discover their career paths through technology.',
     'footer_quick_links' => 'Quick Links',
