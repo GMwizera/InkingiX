@@ -126,7 +126,7 @@ require_once 'includes/header.php';
             <div class="card-body">
                 <h6 class="card-title"><i class="fas fa-info-circle me-2"></i>Demo Accounts</h6>
                 <small class="text-muted">
-                    <strong>Admin:</strong> admin@inkingi.rw / Admin123<br>
+                    <strong>Admin:</strong> admin@inkingi.rw / Admin1234<br>
                     <em>Or register a new student account</em>
                 </small>
             </div>

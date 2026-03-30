@@ -71,8 +71,8 @@ http://localhost/InkingiX
 | Role         | Email                  | Password   |
 |--------------|------------------------|------------|
 | Student      | Register on site       | -          |
-| School Admin | school@inkingi.rw     | School123  |
-| System Admin | admin@inkingi.rw      | Admin123   |
+| School Admin | school@inkingi.rw     | School1234  |
+| System Admin | admin@inkingi.rw      | Admin1234   |
 
 ## Features
 

@@ -350,7 +350,7 @@ INSERT INTO assessment_questions (question_en, question_rw, category_id, weight,
 ('I pay attention to details and accuracy in my work.', 'Ndita ku bisobanuro n''ukuri mu kazi kanjye.', 6, 1, 29),
 ('I like working in a structured and predictable environment.', 'Nkunda gukora ahantu hafite amategeko n''ahashobora kumenyekana.', 6, 1, 30);
 
--- Create default admin users (password: admin123 / school123 - should be changed immediately)
+
 INSERT INTO users (email, password, first_name, last_name, school_name, role, is_active) VALUES
 ('admin@inkingi.rw', '$2y$10$3Rb3.QbFTERYkNmq2k0TMeLKewZ6k8lYAV5ZPxjcAuBOftD6GXGM6', 'System', 'Administrator', NULL, 'system_admin', 1);
 
