@@ -225,5 +225,15 @@ return [
     'admin_student' => 'Umunyeshuri',
     'admin_no_data_yet' => 'Nta makuru ahari.',
     'view_all' => 'Reba Byose',
+
+    // Bookmarks
+    'bookmarks_title' => 'Imyuga Nabitse',
+    'bookmarks_count' => 'yabitswe',
+    'bookmarks_empty_title' => 'Nta myuga wabitse',
+    'bookmarks_empty_desc' => 'Bika imyuga ukunda kugira ngo uzayibone hano nyuma.',
+    'explore_careers' => 'Shakisha Imyuga',
+    'saved_on' => 'Yabitswe',
+    'bookmark_save' => 'Bika umwuga',
+    'bookmark_remove' => 'Kuraho icyabitswe',
 ];
 ?>

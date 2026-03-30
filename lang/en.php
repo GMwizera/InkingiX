@@ -225,5 +225,15 @@ return [
     'admin_student' => 'Student',
     'admin_no_data_yet' => 'No data available yet.',
     'view_all' => 'View All',
+
+    // Bookmarks
+    'bookmarks_title' => 'My Saved Careers',
+    'bookmarks_count' => 'saved',
+    'bookmarks_empty_title' => 'No saved careers yet',
+    'bookmarks_empty_desc' => 'Save careers you\'re interested in to view them here later.',
+    'explore_careers' => 'Explore Careers',
+    'saved_on' => 'Saved',
+    'bookmark_save' => 'Save career',
+    'bookmark_remove' => 'Remove bookmark',
 ];
 ?>
