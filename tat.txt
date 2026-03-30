@@ -1,0 +1,5 @@
+1. Identify what is missing compared to this master spec:
+2. Show me a gap analysis — what exists vs what still needs building
+3. Ask me which sprint to continue from
+
+Do not write any code yet. Just audit and report.

@@ -1,0 +1,103 @@
+<?php
+require_once __DIR__ . '/functions.php';
+$currentUser = getCurrentUser();
+$currentLang = getCurrentLanguage();
+?>
+<!DOCTYPE html>
+<html lang="<?php echo $currentLang; ?>">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="<?php echo __('meta_description', 'EduBridge Rwanda - Career Discovery Platform for Rwandan Students'); ?>">
+    <title><?php echo isset($pageTitle) ? $pageTitle . ' - ' : ''; ?><?php echo SITE_NAME; ?></title>
+
+    <!-- Google Fonts - Roboto -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="assets/css/style.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation for public pages -->
+    <nav class="navbar navbar-expand-lg sticky-top">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="index.php">
+                <i class="fas fa-graduation-cap me-2"></i><?php echo SITE_NAME; ?>
+            </a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.php"><?php echo __('nav_home', 'Home'); ?></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="careers.php"><?php echo __('nav_careers', 'Careers'); ?></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="institutions.php"><?php echo __('nav_institutions', 'Institutions'); ?></a>
+                    </li>
+                    <?php if (isLoggedIn()): ?>
+                    <li class="nav-item">
+                        <a class="nav-link" href="assessment.php"><?php echo __('nav_assessment', 'Take Assessment'); ?></a>
+                    </li>
+                    <?php endif; ?>
+                </ul>
+
+                <ul class="navbar-nav">
+                    <!-- Language Switcher -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
+                            <i class="fas fa-globe me-1"></i>
+                            <?php echo $currentLang === 'en' ? 'English' : 'Kinyarwanda'; ?>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item <?php echo $currentLang === 'en' ? 'active' : ''; ?>" href="?lang=en">English</a></li>
+                            <li><a class="dropdown-item <?php echo $currentLang === 'rw' ? 'active' : ''; ?>" href="?lang=rw">Kinyarwanda</a></li>
+                        </ul>
+                    </li>
+
+                    <?php if (isLoggedIn()): ?>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
+                            <i class="fas fa-user-circle me-1"></i>
+                            <?php echo htmlspecialchars($currentUser['first_name']); ?>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="dashboard.php"><i class="fas fa-tachometer-alt me-2"></i><?php echo __('nav_dashboard', 'Dashboard'); ?></a></li>
+                            <li><a class="dropdown-item" href="profile.php"><i class="fas fa-user me-2"></i><?php echo __('nav_profile', 'Profile'); ?></a></li>
+                            <li><a class="dropdown-item" href="results.php"><i class="fas fa-chart-bar me-2"></i><?php echo __('nav_results', 'My Results'); ?></a></li>
+                            <?php if (hasRole(['school_admin', 'system_admin'])): ?>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="admin/index.php"><i class="fas fa-cog me-2"></i><?php echo __('nav_admin', 'Admin Panel'); ?></a></li>
+                            <?php endif; ?>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item text-danger" href="logout.php"><i class="fas fa-sign-out-alt me-2"></i><?php echo __('nav_logout', 'Logout'); ?></a></li>
+                        </ul>
+                    </li>
+                    <?php else: ?>
+                    <li class="nav-item">
+                        <a class="nav-link" href="login.php"><?php echo __('nav_login', 'Login'); ?></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="btn btn-primary btn-sm ms-2" href="register.php"><?php echo __('nav_register', 'Register'); ?></a>
+                    </li>
+                    <?php endif; ?>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main>
+        <div class="container py-4">
+            <?php displayFlashMessage(); ?>

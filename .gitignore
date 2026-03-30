@@ -1,0 +1,32 @@
+# Environment variables
+.env
+
+# Logs
+*.log
+error_log
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE files
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Dependencies (if added later)
+/vendor/
+/node_modules/
+
+# Local config overrides
+config/local.php
+
+# Temporary files
+*.tmp
+*.temp
+/tmp/
+
+# Uploaded files (if sensitive)
+/uploads/private/
