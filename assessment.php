@@ -1,11 +1,12 @@
 <?php
 /**
  * EduBridge Rwanda - Career Assessment
- * With AJAX auto-save and resume functionality
+ * With AJAX auto-save, resume functionality, and adaptive question weighting
  */
 
 $pageTitle = 'Career Assessment';
 require_once 'includes/functions.php';
+require_once 'includes/matching_engine.php';
 
 // Handle language switch
 if (isset($_GET['lang'])) {
@@ -63,87 +64,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_assessment']))
         exit;
     }
 
-    // Calculate category scores from saved responses
-    $stmt = $db->prepare("
-        SELECT q.category_id, SUM(r.response_value * q.weight) as total_score, COUNT(*) as count
-        FROM assessment_responses r
-        JOIN assessment_questions q ON r.question_id = q.id
-        WHERE r.assessment_id = ?
-        GROUP BY q.category_id
-    ");
-    $stmt->execute([$assessmentId]);
-    $categoryData = $stmt->fetchAll();
+    // Use matching engine to calculate and save results
+    $results = completeAssessment($db, $assessmentId);
 
-    // Clear any existing results for this assessment
-    $stmt = $db->prepare("DELETE FROM assessment_results WHERE assessment_id = ?");
-    $stmt->execute([$assessmentId]);
-    $stmt = $db->prepare("DELETE FROM career_matches WHERE assessment_id = ?");
-    $stmt->execute([$assessmentId]);
-
-    // Save category percentages
-    $categoryScores = [];
-    foreach ($categoryData as $data) {
-        $maxScore = $data['count'] * 5; // Max possible score (5 per question)
-        $percentage = ($data['total_score'] / $maxScore) * 100;
-        $categoryScores[$data['category_id']] = $percentage;
-
-        $stmt = $db->prepare("INSERT INTO assessment_results (assessment_id, category_id, score, percentage) VALUES (?, ?, ?, ?)");
-        $stmt->execute([$assessmentId, $data['category_id'], $data['total_score'], $percentage]);
+    if ($results === false) {
+        setFlashMessage('error', 'Failed to calculate results. Please try again.');
+        header('Location: assessment.php');
+        exit;
     }
-
-    // Get top 2 categories for career matching
-    arsort($categoryScores);
-    $topCategoryIds = array_slice(array_keys($categoryScores), 0, 2);
-    $primaryCategoryId = $topCategoryIds[0] ?? null;
-    $secondaryCategoryId = $topCategoryIds[1] ?? $primaryCategoryId;
-
-    if ($primaryCategoryId) {
-        // Get matching careers
-        $stmt = $db->prepare("
-            SELECT c.id, c.primary_category_id, c.secondary_category_id
-            FROM careers c
-            WHERE c.is_active = 1
-            AND (c.primary_category_id IN (?, ?) OR c.secondary_category_id IN (?, ?))
-            LIMIT 10
-        ");
-        $stmt->execute([$primaryCategoryId, $secondaryCategoryId, $primaryCategoryId, $secondaryCategoryId]);
-        $matchingCareers = $stmt->fetchAll();
-
-        // Calculate match percentage for each career
-        $careerScores = [];
-        foreach ($matchingCareers as $career) {
-            $score = 0;
-
-            // Primary category match (70% weight)
-            if ($career['primary_category_id'] == $primaryCategoryId) {
-                $score += $categoryScores[$primaryCategoryId] * 0.7;
-            } elseif ($career['primary_category_id'] == $secondaryCategoryId) {
-                $score += $categoryScores[$secondaryCategoryId] * 0.5;
-            }
-
-            // Secondary category match (30% weight)
-            if ($career['secondary_category_id'] == $primaryCategoryId) {
-                $score += $categoryScores[$primaryCategoryId] * 0.3;
-            } elseif ($career['secondary_category_id'] == $secondaryCategoryId) {
-                $score += $categoryScores[$secondaryCategoryId] * 0.2;
-            }
-
-            $careerScores[$career['id']] = min($score, 100);
-        }
-
-        // Sort by score and save top 5
-        arsort($careerScores);
-        $rank = 1;
-        foreach (array_slice($careerScores, 0, 5, true) as $careerId => $matchPercentage) {
-            $stmt = $db->prepare("INSERT INTO career_matches (assessment_id, career_id, match_percentage, rank_order) VALUES (?, ?, ?, ?)");
-            $stmt->execute([$assessmentId, $careerId, $matchPercentage, $rank]);
-            $rank++;
-        }
-    }
-
-    // Mark assessment as completed
-    $stmt = $db->prepare("UPDATE user_assessments SET is_completed = 1, completed_at = NOW() WHERE id = ?");
-    $stmt->execute([$assessmentId]);
 
     // Redirect to results
     header('Location: results.php?id=' . $assessmentId);
@@ -192,6 +120,36 @@ require_once 'includes/header.php';
 .resume-banner .progress {
     height: 8px;
     margin-top: 0.5rem;
+}
+
+/* Adaptive mode banner */
+.adaptive-banner {
+    background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+    border: 1px solid #f59e0b;
+    border-radius: 12px;
+    padding: 1rem 1.5rem;
+    margin-bottom: 1rem;
+    animation: fadeInSlide 0.5s ease-out;
+}
+.adaptive-banner i {
+    font-size: 1.5rem;
+    color: #b45309;
+}
+.adaptive-banner strong {
+    color: #92400e;
+}
+.adaptive-banner small {
+    color: #78350f;
+}
+@keyframes fadeInSlide {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 </style>
 
@@ -247,6 +205,20 @@ require_once 'includes/header.php';
 
         <!-- Assessment Form -->
         <div id="assessmentContainer" style="display: none;">
+            <!-- Adaptive Mode Banner (shows after Q10) -->
+            <div id="adaptiveBanner" class="adaptive-banner" style="display: none;">
+                <div class="d-flex align-items-center">
+                    <i class="fas fa-magic me-2"></i>
+                    <div>
+                        <strong><?php echo __('adaptive_mode', 'Adaptive Mode Active'); ?></strong>
+                        <small class="d-block">
+                            <?php echo __('adaptive_mode_desc', 'We\'re focusing on your top interests:'); ?>
+                            <span id="topCategoriesText"></span>
+                        </small>
+                    </div>
+                </div>
+            </div>
+
             <div class="card">
                 <div class="card-header">
                     <div class="d-flex justify-content-between align-items-center mb-2">
@@ -326,6 +298,19 @@ let currentQuestionIndex = 0;
 let assessmentId = <?php echo $existingAssessment ? $existingAssessment['id'] : 'null'; ?>;
 const totalQuestions = <?php echo count($questions); ?>;
 const savedResponses = <?php echo json_encode($savedResponses); ?>;
+let adaptiveModeShown = false;
+const ADAPTIVE_THRESHOLD = 10; // Show adaptive mode after this many questions
+
+// Category names for display
+const categoryNames = {
+    1: { en: 'Realistic', rw: 'Ibikorwa by\'intoki', code: 'R' },
+    2: { en: 'Investigative', rw: 'Ubushakashatsi', code: 'I' },
+    3: { en: 'Artistic', rw: 'Ubuhanzi', code: 'A' },
+    4: { en: 'Social', rw: 'Imibereho', code: 'S' },
+    5: { en: 'Enterprising', rw: 'Ubucuruzi', code: 'E' },
+    6: { en: 'Conventional', rw: 'Amategeko', code: 'C' }
+};
+const currentLang = '<?php echo getCurrentLanguage(); ?>';
 
 // DOM elements
 const introEl = document.getElementById('assessmentIntro');
@@ -337,6 +322,8 @@ const progressBar = document.getElementById('assessmentProgress');
 const currentQuestionEl = document.getElementById('currentQuestion');
 const saveIndicator = document.getElementById('saveIndicator');
 const assessmentIdField = document.getElementById('assessmentIdField');
+const adaptiveBanner = document.getElementById('adaptiveBanner');
+const topCategoriesText = document.getElementById('topCategoriesText');
 
 // Start or resume assessment
 async function startAssessment() {
@@ -390,6 +377,11 @@ async function startAssessment() {
     currentQuestionIndex = startIndex;
     showQuestion(currentQuestionIndex);
     updateProgress();
+
+    // If resuming with 10+ answers, check adaptive mode immediately
+    if (Object.keys(savedResponses).length >= ADAPTIVE_THRESHOLD) {
+        checkAdaptiveMode();
+    }
 }
 
 // Start fresh (abandon current assessment)
@@ -457,6 +449,42 @@ function updateProgress() {
     const percentage = Math.round((answered / totalQuestions) * 100);
     progressBar.style.width = percentage + '%';
     progressBar.setAttribute('aria-valuenow', percentage);
+
+    // Check for adaptive mode trigger
+    if (answered >= ADAPTIVE_THRESHOLD && !adaptiveModeShown) {
+        checkAdaptiveMode();
+    }
+}
+
+// Check and display adaptive mode
+async function checkAdaptiveMode() {
+    if (!assessmentId || adaptiveModeShown) return;
+
+    try {
+        const response = await fetch('get_assessment_progress.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ assessment_id: assessmentId })
+        });
+
+        const data = await response.json();
+
+        if (data.success && data.is_adaptive && data.top_categories && data.top_categories.length >= 2) {
+            // Build category display text
+            const cat1 = data.top_categories[0];
+            const cat2 = data.top_categories[1];
+            const lang = currentLang === 'rw' ? 'name_rw' : 'name_en';
+
+            const displayText = `<strong>${cat1[lang] || cat1.name_en}</strong> & <strong>${cat2[lang] || cat2.name_en}</strong>`;
+            topCategoriesText.innerHTML = displayText;
+
+            // Show banner
+            adaptiveBanner.style.display = 'block';
+            adaptiveModeShown = true;
+        }
+    } catch (error) {
+        console.error('Error checking adaptive mode:', error);
+    }
 }
 
 // Save response via AJAX
