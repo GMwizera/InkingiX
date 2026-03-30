@@ -85,6 +85,17 @@ require_once 'includes/header.php';
                         </span>
                         <?php echo getDemandBadge($career['demand_level'] ?? 'growing'); ?>
                     </div>
+                    <?php if (isLoggedIn()):
+                        $isBookmarked = isCareerBookmarked($career['id']);
+                    ?>
+                    <button type="button"
+                            class="btn bookmark-btn <?php echo $isBookmarked ? 'btn-warning' : 'btn-outline-secondary'; ?>"
+                            data-career-id="<?php echo $career['id']; ?>"
+                            id="bookmarkBtn">
+                        <i class="fas fa-bookmark me-1"></i>
+                        <span class="bookmark-text"><?php echo $isBookmarked ? __('bookmark_saved', 'Saved') : __('bookmark_save', 'Save'); ?></span>
+                    </button>
+                    <?php endif; ?>
                 </div>
                 <h1 class="mb-3"><?php echo getLocalizedField($career, 'title'); ?></h1>
                 <p class="lead text-muted"><?php echo getLocalizedField($career, 'description'); ?></p>
@@ -250,5 +261,46 @@ require_once 'includes/header.php';
         <i class="fas fa-arrow-left me-2"></i><?php echo __('back'); ?>
     </a>
 </div>
+
+<?php if (isLoggedIn()): ?>
+<script>
+// Bookmark toggle functionality
+const bookmarkBtn = document.getElementById('bookmarkBtn');
+if (bookmarkBtn) {
+    bookmarkBtn.addEventListener('click', async function() {
+        const careerId = this.dataset.careerId;
+        const btn = this;
+        const textSpan = btn.querySelector('.bookmark-text');
+
+        try {
+            const response = await fetch('toggle_bookmark.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ career_id: parseInt(careerId) })
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                // Toggle button appearance
+                if (data.is_bookmarked) {
+                    btn.classList.remove('btn-outline-secondary');
+                    btn.classList.add('btn-warning');
+                    textSpan.textContent = '<?php echo __('bookmark_saved', 'Saved'); ?>';
+                } else {
+                    btn.classList.remove('btn-warning');
+                    btn.classList.add('btn-outline-secondary');
+                    textSpan.textContent = '<?php echo __('bookmark_save', 'Save'); ?>';
+                }
+            } else {
+                console.error('Bookmark error:', data.error);
+            }
+        } catch (error) {
+            console.error('Bookmark error:', error);
+        }
+    });
+}
+</script>
+<?php endif; ?>
 
 <?php require_once 'includes/footer.php'; ?>

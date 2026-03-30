@@ -270,6 +270,47 @@ function getCareerMatches($assessmentId) {
 }
 
 /**
+ * Check if a career is bookmarked by the current user
+ */
+function isCareerBookmarked($careerId) {
+    if (!isLoggedIn()) {
+        return false;
+    }
+
+    $db = getDBConnection();
+    $stmt = $db->prepare("SELECT 1 FROM bookmarks WHERE user_id = ? AND career_id = ?");
+    $stmt->execute([$_SESSION['user_id'], $careerId]);
+    return (bool) $stmt->fetch();
+}
+
+/**
+ * Get all bookmarked careers for a user
+ */
+function getUserBookmarks($userId) {
+    $db = getDBConnection();
+    $stmt = $db->prepare("
+        SELECT c.*, b.saved_at, cc.name_en as category_name, cc.code as category_code
+        FROM bookmarks b
+        JOIN careers c ON b.career_id = c.id
+        JOIN career_categories cc ON c.primary_category_id = cc.id
+        WHERE b.user_id = ? AND c.is_active = 1
+        ORDER BY b.saved_at DESC
+    ");
+    $stmt->execute([$userId]);
+    return $stmt->fetchAll();
+}
+
+/**
+ * Get bookmark count for a user
+ */
+function getUserBookmarkCount($userId) {
+    $db = getDBConnection();
+    $stmt = $db->prepare("SELECT COUNT(*) FROM bookmarks WHERE user_id = ?");
+    $stmt->execute([$userId]);
+    return (int) $stmt->fetchColumn();
+}
+
+/**
  * Get demand badge HTML for a career
  * @param string $demandLevel 'low', 'growing', or 'high'
  * @param bool $showIcon Whether to show an icon

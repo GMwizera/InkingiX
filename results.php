@@ -115,7 +115,9 @@ require_once 'includes/header.php';
             <div class="card-body">
                 <?php if (!empty($careerMatches)): ?>
                 <div class="row g-3">
-                    <?php foreach ($careerMatches as $index => $match): ?>
+                    <?php foreach ($careerMatches as $index => $match):
+                        $isBookmarked = isCareerBookmarked($match['career_id']);
+                    ?>
                     <div class="col-md-6">
                         <div class="card h-100 career-card <?php echo $index === 0 ? 'border-primary' : ''; ?>">
                             <div class="card-body">
@@ -123,7 +125,15 @@ require_once 'includes/header.php';
                                     <span class="badge bg-<?php echo $index === 0 ? 'primary' : 'secondary'; ?>">
                                         #<?php echo $index + 1; ?>
                                     </span>
-                                    <span class="match-badge"><?php echo number_format($match['match_percentage'], 0); ?>%</span>
+                                    <div class="d-flex align-items-center gap-2">
+                                        <button type="button"
+                                                class="btn btn-sm bookmark-btn <?php echo $isBookmarked ? 'btn-warning' : 'btn-outline-secondary'; ?>"
+                                                data-career-id="<?php echo $match['career_id']; ?>"
+                                                title="<?php echo $isBookmarked ? __('bookmark_remove', 'Remove bookmark') : __('bookmark_save', 'Save career'); ?>">
+                                            <i class="fas fa-<?php echo $isBookmarked ? 'bookmark' : 'bookmark'; ?>"></i>
+                                        </button>
+                                        <span class="match-badge"><?php echo number_format($match['match_percentage'], 0); ?>%</span>
+                                    </div>
                                 </div>
                                 <h5 class="card-title"><?php echo getLocalizedField($match, 'title'); ?></h5>
                                 <div class="mb-2">
@@ -218,5 +228,49 @@ require_once 'includes/header.php';
         </div>
     </div>
 </div>
+
+<script>
+// Bookmark toggle functionality
+document.querySelectorAll('.bookmark-btn').forEach(btn => {
+    btn.addEventListener('click', async function() {
+        const careerId = this.dataset.careerId;
+        const btn = this;
+
+        try {
+            const response = await fetch('toggle_bookmark.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ career_id: parseInt(careerId) })
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                // Toggle button appearance
+                if (data.is_bookmarked) {
+                    btn.classList.remove('btn-outline-secondary');
+                    btn.classList.add('btn-warning');
+                    btn.title = '<?php echo __('bookmark_remove', 'Remove bookmark'); ?>';
+                } else {
+                    btn.classList.remove('btn-warning');
+                    btn.classList.add('btn-outline-secondary');
+                    btn.title = '<?php echo __('bookmark_save', 'Save career'); ?>';
+                }
+
+                // Show brief feedback
+                const originalHTML = btn.innerHTML;
+                btn.innerHTML = '<i class="fas fa-check"></i>';
+                setTimeout(() => {
+                    btn.innerHTML = '<i class="fas fa-bookmark"></i>';
+                }, 500);
+            } else {
+                console.error('Bookmark error:', data.error);
+            }
+        } catch (error) {
+            console.error('Bookmark error:', error);
+        }
+    });
+});
+</script>
 
 <?php require_once 'includes/footer.php'; ?>

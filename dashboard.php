@@ -23,6 +23,10 @@ if ($latestAssessment && $latestAssessment['is_completed']) {
     $careerMatches = getCareerMatches($latestAssessment['id']);
 }
 
+// Get user's bookmarked careers
+$bookmarks = getUserBookmarks($currentUser['id']);
+$bookmarkCount = count($bookmarks);
+
 // Set page greeting
 $pageGreeting = __('dashboard_welcome', 'Hello') . ', ' . htmlspecialchars($currentUser['first_name']) . '!';
 $pageSubtitle = __('dashboard_subtitle', 'Explore your career discovery journey');
@@ -44,6 +48,12 @@ require_once 'includes/header-dashboard.php';
     <a href="results.php" class="action-btn info">
         <i class="fas fa-chart-bar"></i>
         <?php echo __('dashboard_view_results', 'View Results'); ?>
+    </a>
+    <?php endif; ?>
+    <?php if ($bookmarkCount > 0): ?>
+    <a href="bookmarks.php" class="action-btn" style="background: #fef3c7; color: #d97706;">
+        <i class="fas fa-bookmark"></i>
+        <?php echo __('dashboard_my_bookmarks', 'My Bookmarks'); ?> (<?php echo $bookmarkCount; ?>)
     </a>
     <?php endif; ?>
 </section>
@@ -102,19 +112,17 @@ require_once 'includes/header-dashboard.php';
 
     <div class="stat-card">
         <div class="stat-card-header">
-            <div class="stat-icon progress">
-                <i class="fas fa-star"></i>
+            <div class="stat-icon progress" style="background: #fef3c7;">
+                <i class="fas fa-bookmark" style="color: #d97706;"></i>
             </div>
         </div>
-        <p class="stat-label"><?php echo __('dashboard_profile', 'Profile'); ?></p>
-        <p class="stat-value"><?php echo $currentUser['profile_completed'] ? '100%' : '50%'; ?></p>
+        <p class="stat-label"><?php echo __('dashboard_bookmarks', 'Saved Careers'); ?></p>
+        <p class="stat-value"><?php echo $bookmarkCount; ?></p>
         <div class="stat-change">
-            <?php if ($currentUser['profile_completed']): ?>
-            <span class="stat-change-value positive"><i class="fas fa-check"></i></span>
-            <span class="stat-change-text"><?php echo __('dashboard_complete', 'Complete'); ?></span>
+            <?php if ($bookmarkCount > 0): ?>
+            <a href="bookmarks.php" class="stat-change-text text-decoration-none"><?php echo __('view_all', 'View All'); ?> <i class="fas fa-arrow-right"></i></a>
             <?php else: ?>
-            <span class="stat-change-value"><i class="fas fa-exclamation"></i></span>
-            <span class="stat-change-text"><?php echo __('dashboard_incomplete', 'Incomplete'); ?></span>
+            <span class="stat-change-text"><?php echo __('dashboard_no_bookmarks', 'None yet'); ?></span>
             <?php endif; ?>
         </div>
     </div>
@@ -213,6 +221,29 @@ require_once 'includes/header-dashboard.php';
                         <div class="progress-bar-container">
                             <div class="progress-fill" style="width: <?php echo $match['match_percentage']; ?>%"></div>
                         </div>
+                    </div>
+                </a>
+                <?php endforeach; ?>
+            </div>
+        </div>
+        <?php endif; ?>
+
+        <!-- Saved Careers (Bookmarks) -->
+        <?php if (!empty($bookmarks)): ?>
+        <div class="sidebar-panel">
+            <div class="section-header">
+                <h3 class="section-title"><i class="fas fa-bookmark me-2" style="color: #d97706;"></i><?php echo __('dashboard_saved_careers', 'Saved Careers'); ?></h3>
+                <a href="bookmarks.php" class="view-all"><?php echo __('view_all', 'See All'); ?></a>
+            </div>
+            <div class="career-list">
+                <?php foreach (array_slice($bookmarks, 0, 3) as $bookmark): ?>
+                <a href="career.php?id=<?php echo $bookmark['id']; ?>" class="career-item" style="text-decoration: none; color: inherit;">
+                    <div class="career-info">
+                        <span class="career-name"><?php echo getLocalizedField($bookmark, 'title'); ?></span>
+                        <span class="career-category"><?php echo getDemandBadge($bookmark['demand_level'] ?? 'growing', false); ?></span>
+                    </div>
+                    <div class="career-match">
+                        <i class="fas fa-chevron-right text-muted"></i>
                     </div>
                 </a>
                 <?php endforeach; ?>

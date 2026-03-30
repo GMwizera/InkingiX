@@ -205,6 +205,19 @@ CREATE TABLE IF NOT EXISTS career_matches (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- =====================================================
+-- BOOKMARKS (Saved careers)
+-- =====================================================
+CREATE TABLE IF NOT EXISTS bookmarks (
+    user_id INT NOT NULL,
+    career_id INT NOT NULL,
+    saved_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (user_id, career_id),
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (career_id) REFERENCES careers(id) ON DELETE CASCADE,
+    INDEX idx_user (user_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- =====================================================
 -- INSERT DEFAULT DATA
 -- =====================================================
 
