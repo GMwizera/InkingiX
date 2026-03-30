@@ -1,13 +1,14 @@
 <?php
+
 /**
- * EduBridge Rwanda - Admin Careers Management
+ * InkingiX Rwanda - Admin Careers Management
  * System admin only - School admins don't manage careers
  */
 
-$pageTitle = __('nav_careers', 'Manage Careers');
-
 require_once '../includes/functions.php';
 requireRole(['system_admin']);
+
+$pageTitle = __('nav_careers', 'Manage Careers');
 
 $currentUser = getCurrentUser();
 $db = getDBConnection();
@@ -70,48 +71,48 @@ require_once 'includes/header-admin.php';
             </thead>
             <tbody>
                 <?php if (empty($careers)): ?>
-                <tr>
-                    <td colspan="5" class="text-center text-muted py-4">
-                        <?php echo __('admin_no_data_yet'); ?>
-                    </td>
-                </tr>
+                    <tr>
+                        <td colspan="5" class="text-center text-muted py-4">
+                            <?php echo __('admin_no_data_yet'); ?>
+                        </td>
+                    </tr>
                 <?php else: ?>
-                <?php foreach ($careers as $career): ?>
-                <tr>
-                    <td>
-                        <strong><?php echo htmlspecialchars($career['title_en']); ?></strong>
-                        <?php if ($career['title_rw']): ?>
-                        <br><small class="text-muted"><?php echo htmlspecialchars($career['title_rw']); ?></small>
-                        <?php endif; ?>
-                    </td>
-                    <td>
-                        <span class="badge category-badge-<?php echo $career['category_code']; ?>">
-                            <?php echo $career['category_name']; ?>
-                        </span>
-                    </td>
-                    <td>
-                        <?php echo formatCurrency($career['salary_range_min']); ?> -
-                        <?php echo formatCurrency($career['salary_range_max']); ?>
-                    </td>
-                    <td>
-                        <span class="badge bg-<?php echo $career['is_active'] ? 'success' : 'secondary'; ?>">
-                            <?php echo $career['is_active'] ? 'Active' : 'Inactive'; ?>
-                        </span>
-                    </td>
-                    <td>
-                        <a href="career-edit.php?id=<?php echo $career['id']; ?>" class="btn btn-sm btn-outline-primary">
-                            <i class="fas fa-edit"></i>
-                        </a>
-                        <form method="POST" class="d-inline">
-                            <input type="hidden" name="career_id" value="<?php echo $career['id']; ?>">
-                            <input type="hidden" name="action" value="toggle_status">
-                            <button type="submit" class="btn btn-sm btn-outline-<?php echo $career['is_active'] ? 'warning' : 'success'; ?>">
-                                <i class="fas fa-<?php echo $career['is_active'] ? 'eye-slash' : 'eye'; ?>"></i>
-                            </button>
-                        </form>
-                    </td>
-                </tr>
-                <?php endforeach; ?>
+                    <?php foreach ($careers as $career): ?>
+                        <tr>
+                            <td>
+                                <strong><?php echo htmlspecialchars($career['title_en']); ?></strong>
+                                <?php if ($career['title_rw']): ?>
+                                    <br><small class="text-muted"><?php echo htmlspecialchars($career['title_rw']); ?></small>
+                                <?php endif; ?>
+                            </td>
+                            <td>
+                                <span class="badge category-badge-<?php echo $career['category_code']; ?>">
+                                    <?php echo $career['category_name']; ?>
+                                </span>
+                            </td>
+                            <td>
+                                <?php echo formatCurrency($career['salary_range_min']); ?> -
+                                <?php echo formatCurrency($career['salary_range_max']); ?>
+                            </td>
+                            <td>
+                                <span class="badge bg-<?php echo $career['is_active'] ? 'success' : 'secondary'; ?>">
+                                    <?php echo $career['is_active'] ? 'Active' : 'Inactive'; ?>
+                                </span>
+                            </td>
+                            <td>
+                                <a href="career-edit.php?id=<?php echo $career['id']; ?>" class="btn btn-sm btn-outline-primary">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <form method="POST" class="d-inline">
+                                    <input type="hidden" name="career_id" value="<?php echo $career['id']; ?>">
+                                    <input type="hidden" name="action" value="toggle_status">
+                                    <button type="submit" class="btn btn-sm btn-outline-<?php echo $career['is_active'] ? 'warning' : 'success'; ?>">
+                                        <i class="fas fa-<?php echo $career['is_active'] ? 'eye-slash' : 'eye'; ?>"></i>
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
                 <?php endif; ?>
             </tbody>
         </table>
@@ -147,7 +148,7 @@ require_once 'includes/header-admin.php';
                             <label class="form-label">Primary Category</label>
                             <select class="form-select" name="primary_category_id" required>
                                 <?php foreach ($categories as $cat): ?>
-                                <option value="<?php echo $cat['id']; ?>"><?php echo $cat['name_en']; ?></option>
+                                    <option value="<?php echo $cat['id']; ?>"><?php echo $cat['name_en']; ?></option>
                                 <?php endforeach; ?>
                             </select>
                         </div>
@@ -156,7 +157,7 @@ require_once 'includes/header-admin.php';
                             <select class="form-select" name="secondary_category_id">
                                 <option value="">None</option>
                                 <?php foreach ($categories as $cat): ?>
-                                <option value="<?php echo $cat['id']; ?>"><?php echo $cat['name_en']; ?></option>
+                                    <option value="<?php echo $cat['id']; ?>"><?php echo $cat['name_en']; ?></option>
                                 <?php endforeach; ?>
                             </select>
                         </div>

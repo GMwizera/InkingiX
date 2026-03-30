@@ -1,6 +1,7 @@
 <?php
+
 /**
- * EduBridge Rwanda - Landing Page
+ * InkingiX Rwanda - Landing Page
  * eCoach-style design
  */
 
@@ -39,11 +40,15 @@ try {
 ?>
 <!DOCTYPE html>
 <html lang="<?php echo $currentLang; ?>">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="<?php echo __('meta_description', 'EduBridge Rwanda - Career Discovery Platform for Rwandan Students. Discover your ideal career path through personalized assessments.'); ?>">
+    <meta name="description" content="<?php echo __('meta_description', 'InkingiX Rwanda - Career Discovery Platform for Rwandan Students. Discover your ideal career path through personalized assessments.'); ?>">
     <title><?php echo $pageTitle; ?> - <?php echo SITE_NAME; ?></title>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="assets/images/favicon.svg">
 
     <!-- Google Fonts - Roboto -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -57,6 +62,7 @@ try {
     <!-- Custom CSS -->
     <link href="assets/css/style.css" rel="stylesheet">
 </head>
+
 <body class="landing-page">
     <!-- Top Accent Bar -->
     <div class="top-accent-bar"></div>
@@ -65,7 +71,7 @@ try {
     <nav class="navbar navbar-expand-lg landing-navbar">
         <div class="container">
             <a class="navbar-brand fw-bold" href="index.php">
-                <i class="fas fa-graduation-cap me-2"></i><?php echo SITE_NAME; ?>
+                <i class="fas fa-graduation-cap me-2"></i> InkingiX Rwanda 
             </a>
 
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -97,17 +103,17 @@ try {
 
                 <ul class="navbar-nav">
                     <?php if (isLoggedIn()): ?>
-                    <li class="nav-item">
-                        <a class="btn btn-primary" href="dashboard.php">
-                            <?php echo __('nav_dashboard', 'Dashboard'); ?>
-                        </a>
-                    </li>
+                        <li class="nav-item">
+                            <a class="btn btn-primary" href="dashboard.php">
+                                <?php echo __('nav_dashboard', 'Dashboard'); ?>
+                            </a>
+                        </li>
                     <?php else: ?>
-                    <li class="nav-item">
-                        <a class="btn btn-primary" href="login.php">
-                            <?php echo __('nav_login', 'Login'); ?> / <?php echo __('nav_register', 'Register'); ?>
-                        </a>
-                    </li>
+                        <li class="nav-item">
+                            <a class="btn btn-primary" href="login.php">
+                                <?php echo __('nav_login', 'Login'); ?> / <?php echo __('nav_register', 'Register'); ?>
+                            </a>
+                        </li>
                     <?php endif; ?>
                 </ul>
             </div>
@@ -127,15 +133,15 @@ try {
                             <?php echo __('hero_ecoach_subtitle', 'Start, switch, or advance your career with personalized assessments and guidance from Rwanda\'s leading career discovery platform.'); ?>
                         </p>
                         <?php if (isLoggedIn()): ?>
-                        <a href="assessment.php" class="btn btn-primary">
-                            <?php echo __('hero_cta', 'Take Assessment'); ?>
-                            <i class="fas fa-arrow-right"></i>
-                        </a>
+                            <a href="assessment.php" class="btn btn-primary">
+                                <?php echo __('hero_cta', 'Take Assessment'); ?>
+                                <i class="fas fa-arrow-right"></i>
+                            </a>
                         <?php else: ?>
-                        <a href="register.php" class="btn btn-primary">
-                            <?php echo __('hero_cta_explore', 'Explore Careers'); ?>
-                            <i class="fas fa-arrow-right"></i>
-                        </a>
+                            <a href="register.php" class="btn btn-primary">
+                                <?php echo __('hero_cta_explore', 'Explore Careers'); ?>
+                                <i class="fas fa-arrow-right"></i>
+                            </a>
                         <?php endif; ?>
                     </div>
                 </div>
@@ -149,9 +155,9 @@ try {
 
                         <!-- Hero Image -->
                         <div class="hero-person-image">
-                            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=500&h=600&fit=crop&crop=face"
-                                 alt="Student discovering career path"
-                                 class="hero-img">
+                            <img src="assets/images/homepage_image.png"
+                                alt="African student discovering career path"
+                                class="hero-img">
                         </div>
 
                         <!-- Success Rate Card -->
@@ -219,15 +225,15 @@ try {
                 <a href="careers.php" class="category-tab active"><?php echo __('all_careers', 'All Careers'); ?></a>
                 <?php if (!empty($categories)): ?>
                     <?php foreach (array_slice($categories, 0, 5) as $cat): ?>
-                    <a href="careers.php?category=<?php echo $cat['id']; ?>" class="category-tab">
-                        <?php echo htmlspecialchars($cat['name_en']); ?>
-                    </a>
+                        <a href="careers.php?category=<?php echo $cat['id']; ?>" class="category-tab">
+                            <?php echo htmlspecialchars($cat['name_en']); ?>
+                        </a>
                     <?php endforeach; ?>
                 <?php else: ?>
-                <a href="careers.php" class="category-tab">Technology</a>
-                <a href="careers.php" class="category-tab">Healthcare</a>
-                <a href="careers.php" class="category-tab">Business</a>
-                <a href="careers.php" class="category-tab">Education</a>
+                    <a href="careers.php" class="category-tab">Technology</a>
+                    <a href="careers.php" class="category-tab">Healthcare</a>
+                    <a href="careers.php" class="category-tab">Business</a>
+                    <a href="careers.php" class="category-tab">Education</a>
                 <?php endif; ?>
                 <a href="careers.php" class="category-tab"><?php echo __('view_all', 'View All'); ?></a>
             </div>
@@ -236,28 +242,28 @@ try {
             <div class="career-cards-grid">
                 <?php if (!empty($careers)): ?>
                     <?php foreach ($careers as $index => $career): ?>
-                    <a href="career.php?id=<?php echo $career['id']; ?>" class="career-card-new">
-                        <div class="career-card-image">
-                            <i class="fas fa-<?php
-                                $icons = ['briefcase', 'laptop-code', 'stethoscope', 'building', 'chart-line', 'graduation-cap'];
-                                echo $icons[$index % count($icons)];
-                            ?>"></i>
-                            <?php if ($index === 2): ?>
-                            <span class="career-card-badge"><?php echo __('popular', 'Popular'); ?></span>
-                            <?php endif; ?>
-                        </div>
-                        <div class="career-card-body">
-                            <h5><?php echo getLocalizedField($career, 'title'); ?></h5>
-                            <p class="career-category"><?php echo htmlspecialchars($career['category_name'] ?? 'General'); ?></p>
-                            <div class="career-card-meta">
-                                <span><i class="fas fa-money-bill-wave me-1"></i><?php
-                                    $min = isset($career['salary_range_min']) ? number_format($career['salary_range_min']/1000) . 'K' : '200K';
-                                    $max = isset($career['salary_range_max']) ? number_format($career['salary_range_max']/1000) . 'K' : '1M';
-                                    echo $min . ' - ' . $max . ' RWF';
-                                ?></span>
+                        <a href="career.php?id=<?php echo $career['id']; ?>" class="career-card-new">
+                            <div class="career-card-image">
+                                <i class="fas fa-<?php
+                                                    $icons = ['briefcase', 'laptop-code', 'stethoscope', 'building', 'chart-line', 'graduation-cap'];
+                                                    echo $icons[$index % count($icons)];
+                                                    ?>"></i>
+                                <?php if ($index === 2): ?>
+                                    <span class="career-card-badge"><?php echo __('popular', 'Popular'); ?></span>
+                                <?php endif; ?>
                             </div>
-                        </div>
-                    </a>
+                            <div class="career-card-body">
+                                <h5><?php echo getLocalizedField($career, 'title'); ?></h5>
+                                <p class="career-category"><?php echo htmlspecialchars($career['category_name'] ?? 'General'); ?></p>
+                                <div class="career-card-meta">
+                                    <span><i class="fas fa-money-bill-wave me-1"></i><?php
+                                                                                        $min = isset($career['salary_range_min']) ? number_format($career['salary_range_min'] / 1000) . 'K' : '200K';
+                                                                                        $max = isset($career['salary_range_max']) ? number_format($career['salary_range_max'] / 1000) . 'K' : '1M';
+                                                                                        echo $min . ' - ' . $max . ' RWF';
+                                                                                        ?></span>
+                                </div>
+                            </div>
+                        </a>
                     <?php endforeach; ?>
                 <?php else: ?>
                     <!-- Placeholder cards if no careers in database -->
@@ -378,15 +384,15 @@ try {
                 <h2 class="cta-title"><?php echo __('cta_title', 'Ready to Discover Your Future?'); ?></h2>
                 <p class="cta-subtitle"><?php echo __('cta_subtitle', 'Join thousands of Rwandan students who have found their career path. Start your free assessment today.'); ?></p>
                 <?php if (isLoggedIn()): ?>
-                <a href="assessment.php" class="btn-light">
-                    <?php echo __('cta_btn_assessment', 'Take Assessment Now'); ?>
-                    <i class="fas fa-arrow-right"></i>
-                </a>
+                    <a href="assessment.php" class="btn-light">
+                        <?php echo __('cta_btn_assessment', 'Take Assessment Now'); ?>
+                        <i class="fas fa-arrow-right"></i>
+                    </a>
                 <?php else: ?>
-                <a href="register.php" class="btn-light">
-                    <?php echo __('cta_btn_start', 'Get Started Free'); ?>
-                    <i class="fas fa-arrow-right"></i>
-                </a>
+                    <a href="register.php" class="btn-light">
+                        <?php echo __('cta_btn_start', 'Get Started Free'); ?>
+                        <i class="fas fa-arrow-right"></i>
+                    </a>
                 <?php endif; ?>
             </div>
         </div>
@@ -417,12 +423,12 @@ try {
                     <h5><?php echo __('footer_account', 'Account'); ?></h5>
                     <ul>
                         <?php if (isLoggedIn()): ?>
-                        <li><a href="dashboard.php"><?php echo __('nav_dashboard', 'Dashboard'); ?></a></li>
-                        <li><a href="assessment.php"><?php echo __('nav_assessment', 'Assessment'); ?></a></li>
-                        <li><a href="profile.php"><?php echo __('nav_profile', 'Profile'); ?></a></li>
+                            <li><a href="dashboard.php"><?php echo __('nav_dashboard', 'Dashboard'); ?></a></li>
+                            <li><a href="assessment.php"><?php echo __('nav_assessment', 'Assessment'); ?></a></li>
+                            <li><a href="profile.php"><?php echo __('nav_profile', 'Profile'); ?></a></li>
                         <?php else: ?>
-                        <li><a href="login.php"><?php echo __('nav_login', 'Login'); ?></a></li>
-                        <li><a href="register.php"><?php echo __('nav_register', 'Register'); ?></a></li>
+                            <li><a href="login.php"><?php echo __('nav_login', 'Login'); ?></a></li>
+                            <li><a href="register.php"><?php echo __('nav_register', 'Register'); ?></a></li>
                         <?php endif; ?>
                     </ul>
                 </div>
@@ -430,7 +436,7 @@ try {
                 <div class="footer-links">
                     <h5><?php echo __('footer_contact', 'Contact'); ?></h5>
                     <ul>
-                        <li><a href="mailto:info@edubridge.rw"><i class="fas fa-envelope me-2"></i>info@edubridge.rw</a></li>
+                        <li><a href="mailto:info@InkingiX.rw"><i class="fas fa-envelope me-2"></i>info@InkingiX.rw</a></li>
                         <li><a href="tel:+250788000000"><i class="fas fa-phone me-2"></i>+250 788 000 000</a></li>
                         <li><a href="#"><i class="fas fa-map-marker-alt me-2"></i>Kigali, Rwanda</a></li>
                     </ul>
@@ -454,4 +460,5 @@ try {
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>

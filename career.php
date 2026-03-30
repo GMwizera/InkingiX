@@ -1,6 +1,7 @@
 <?php
+
 /**
- * EduBridge Rwanda - Career Detail Page
+ * InkingiX Rwanda - Career Detail Page
  */
 
 require_once 'includes/functions.php';
@@ -38,6 +39,7 @@ if (!$career) {
 }
 
 $pageTitle = getLocalizedField($career, 'title');
+$pageSubtitle = 'Career details, requirements, and education pathways';
 
 // Get institutions offering this career
 $stmt = $db->prepare("
@@ -93,13 +95,13 @@ if (isLoggedIn()) {
                     <?php if (isLoggedIn()):
                         $isBookmarked = isCareerBookmarked($career['id']);
                     ?>
-                    <button type="button"
+                        <button type="button"
                             class="btn bookmark-btn <?php echo $isBookmarked ? 'btn-warning' : 'btn-outline-secondary'; ?>"
                             data-career-id="<?php echo $career['id']; ?>"
                             id="bookmarkBtn">
-                        <i class="fas fa-bookmark me-1"></i>
-                        <span class="bookmark-text"><?php echo $isBookmarked ? __('bookmark_saved', 'Saved') : __('bookmark_save', 'Save'); ?></span>
-                    </button>
+                            <i class="fas fa-bookmark me-1"></i>
+                            <span class="bookmark-text"><?php echo $isBookmarked ? __('bookmark_saved', 'Saved') : __('bookmark_save', 'Save'); ?></span>
+                        </button>
                     <?php endif; ?>
                 </div>
                 <h1 class="mb-3"><?php echo getLocalizedField($career, 'title'); ?></h1>
@@ -118,7 +120,7 @@ if (isLoggedIn()) {
                 ?>
                 <div class="d-flex flex-wrap gap-2">
                     <?php foreach ($skills as $skill): ?>
-                    <span class="badge bg-light text-dark border"><?php echo trim($skill); ?></span>
+                        <span class="badge bg-light text-dark border"><?php echo trim($skill); ?></span>
                     <?php endforeach; ?>
                 </div>
             </div>
@@ -136,58 +138,58 @@ if (isLoggedIn()) {
 
         <!-- Where to Study -->
         <?php if (!empty($institutions)): ?>
-        <div class="card mb-4">
-            <div class="card-header">
-                <h5 class="mb-0"><i class="fas fa-university me-2"></i><?php echo __('career_institutions'); ?></h5>
-            </div>
-            <div class="card-body">
-                <div class="table-responsive">
-                    <table class="table table-hover">
-                        <thead>
-                            <tr>
-                                <th>Institution</th>
-                                <th>Program</th>
-                                <th>Duration</th>
-                                <th>Type</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php foreach ($institutions as $inst): ?>
-                            <tr>
-                                <td>
-                                    <strong><?php echo getLocalizedField($inst, 'name'); ?></strong>
-                                    <?php if ($inst['website']): ?>
-                                    <br><small><a href="<?php echo $inst['website']; ?>" target="_blank" class="text-muted">
-                                        <i class="fas fa-external-link-alt me-1"></i>Visit Website
-                                    </a></small>
-                                    <?php endif; ?>
-                                </td>
-                                <td><?php echo getLocalizedField($inst, 'program_name'); ?></td>
-                                <td><?php echo $inst['duration']; ?></td>
-                                <td>
-                                    <span class="badge bg-<?php echo $inst['type'] === 'university' ? 'primary' : ($inst['type'] === 'tvet' ? 'success' : 'info'); ?>">
-                                        <?php echo ucfirst($inst['type']); ?>
-                                    </span>
-                                </td>
-                            </tr>
-                            <?php endforeach; ?>
-                        </tbody>
-                    </table>
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-university me-2"></i><?php echo __('career_institutions'); ?></h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Institution</th>
+                                    <th>Program</th>
+                                    <th>Duration</th>
+                                    <th>Type</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php foreach ($institutions as $inst): ?>
+                                    <tr>
+                                        <td>
+                                            <strong><?php echo getLocalizedField($inst, 'name'); ?></strong>
+                                            <?php if ($inst['website']): ?>
+                                                <br><small><a href="<?php echo $inst['website']; ?>" target="_blank" class="text-muted">
+                                                        <i class="fas fa-external-link-alt me-1"></i>Visit Website
+                                                    </a></small>
+                                            <?php endif; ?>
+                                        </td>
+                                        <td><?php echo getLocalizedField($inst, 'program_name'); ?></td>
+                                        <td><?php echo $inst['duration']; ?></td>
+                                        <td>
+                                            <span class="badge bg-<?php echo $inst['type'] === 'university' ? 'primary' : ($inst['type'] === 'tvet' ? 'success' : 'info'); ?>">
+                                                <?php echo ucfirst($inst['type']); ?>
+                                            </span>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
-        </div>
         <?php endif; ?>
 
         <!-- Job Outlook -->
         <?php if (!empty($career['job_outlook_en'])): ?>
-        <div class="card mb-4">
-            <div class="card-header">
-                <h5 class="mb-0"><i class="fas fa-chart-line me-2"></i><?php echo __('career_outlook'); ?></h5>
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-chart-line me-2"></i><?php echo __('career_outlook'); ?></h5>
+                </div>
+                <div class="card-body">
+                    <p><?php echo getLocalizedField($career, 'job_outlook'); ?></p>
+                </div>
             </div>
-            <div class="card-body">
-                <p><?php echo getLocalizedField($career, 'job_outlook'); ?></p>
-            </div>
-        </div>
         <?php endif; ?>
     </div>
 
@@ -213,49 +215,49 @@ if (isLoggedIn()) {
 
         <!-- Take Assessment CTA -->
         <?php if (!isLoggedIn()): ?>
-        <div class="card mb-4 bg-primary text-white">
-            <div class="card-body text-center">
-                <i class="fas fa-clipboard-list fa-2x mb-3"></i>
-                <h6>Is this career right for you?</h6>
-                <p class="small opacity-75 mb-3">Take our free career assessment to find out!</p>
-                <a href="register.php" class="btn btn-light btn-sm">
-                    <i class="fas fa-user-plus me-1"></i>Get Started
-                </a>
+            <div class="card mb-4 bg-primary text-white">
+                <div class="card-body text-center">
+                    <i class="fas fa-clipboard-list fa-2x mb-3"></i>
+                    <h6>Is this career right for you?</h6>
+                    <p class="small opacity-75 mb-3">Take our free career assessment to find out!</p>
+                    <a href="register.php" class="btn btn-light btn-sm">
+                        <i class="fas fa-user-plus me-1"></i>Get Started
+                    </a>
+                </div>
             </div>
-        </div>
         <?php else: ?>
-        <div class="card mb-4">
-            <div class="card-body text-center">
-                <i class="fas fa-clipboard-list fa-2x text-primary mb-3"></i>
-                <h6>Check Your Match</h6>
-                <p class="small text-muted mb-3">See how well this career matches your interests!</p>
-                <a href="assessment.php" class="btn btn-primary btn-sm">
-                    <i class="fas fa-play me-1"></i>Take Assessment
-                </a>
+            <div class="card mb-4">
+                <div class="card-body text-center">
+                    <i class="fas fa-clipboard-list fa-2x text-primary mb-3"></i>
+                    <h6>Check Your Match</h6>
+                    <p class="small text-muted mb-3">See how well this career matches your interests!</p>
+                    <a href="assessment.php" class="btn btn-primary btn-sm">
+                        <i class="fas fa-play me-1"></i>Take Assessment
+                    </a>
+                </div>
             </div>
-        </div>
         <?php endif; ?>
 
         <!-- Related Careers -->
         <?php if (!empty($relatedCareers)): ?>
-        <div class="card">
-            <div class="card-header">
-                <h6 class="mb-0"><i class="fas fa-link me-2"></i><?php echo __('career_related'); ?></h6>
+            <div class="card">
+                <div class="card-header">
+                    <h6 class="mb-0"><i class="fas fa-link me-2"></i><?php echo __('career_related'); ?></h6>
+                </div>
+                <div class="list-group list-group-flush">
+                    <?php foreach ($relatedCareers as $related): ?>
+                        <a href="career.php?id=<?php echo $related['id']; ?>" class="list-group-item list-group-item-action">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <span class="d-block"><?php echo getLocalizedField($related, 'title'); ?></span>
+                                    <?php echo getDemandBadge($related['demand_level'] ?? 'growing', false); ?>
+                                </div>
+                                <i class="fas fa-chevron-right text-muted"></i>
+                            </div>
+                        </a>
+                    <?php endforeach; ?>
+                </div>
             </div>
-            <div class="list-group list-group-flush">
-                <?php foreach ($relatedCareers as $related): ?>
-                <a href="career.php?id=<?php echo $related['id']; ?>" class="list-group-item list-group-item-action">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <span class="d-block"><?php echo getLocalizedField($related, 'title'); ?></span>
-                            <?php echo getDemandBadge($related['demand_level'] ?? 'growing', false); ?>
-                        </div>
-                        <i class="fas fa-chevron-right text-muted"></i>
-                    </div>
-                </a>
-                <?php endforeach; ?>
-            </div>
-        </div>
         <?php endif; ?>
     </div>
 </div>
@@ -268,44 +270,48 @@ if (isLoggedIn()) {
 </div>
 
 <?php if (isLoggedIn()): ?>
-<script>
-// Bookmark toggle functionality
-const bookmarkBtn = document.getElementById('bookmarkBtn');
-if (bookmarkBtn) {
-    bookmarkBtn.addEventListener('click', async function() {
-        const careerId = this.dataset.careerId;
-        const btn = this;
-        const textSpan = btn.querySelector('.bookmark-text');
+    <script>
+        // Bookmark toggle functionality
+        const bookmarkBtn = document.getElementById('bookmarkBtn');
+        if (bookmarkBtn) {
+            bookmarkBtn.addEventListener('click', async function() {
+                const careerId = this.dataset.careerId;
+                const btn = this;
+                const textSpan = btn.querySelector('.bookmark-text');
 
-        try {
-            const response = await fetch('toggle_bookmark.php', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ career_id: parseInt(careerId) })
-            });
+                try {
+                    const response = await fetch('toggle_bookmark.php', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            career_id: parseInt(careerId)
+                        })
+                    });
 
-            const data = await response.json();
+                    const data = await response.json();
 
-            if (data.success) {
-                // Toggle button appearance
-                if (data.is_bookmarked) {
-                    btn.classList.remove('btn-outline-secondary');
-                    btn.classList.add('btn-warning');
-                    textSpan.textContent = '<?php echo __('bookmark_saved', 'Saved'); ?>';
-                } else {
-                    btn.classList.remove('btn-warning');
-                    btn.classList.add('btn-outline-secondary');
-                    textSpan.textContent = '<?php echo __('bookmark_save', 'Save'); ?>';
+                    if (data.success) {
+                        // Toggle button appearance
+                        if (data.is_bookmarked) {
+                            btn.classList.remove('btn-outline-secondary');
+                            btn.classList.add('btn-warning');
+                            textSpan.textContent = '<?php echo __('bookmark_saved', 'Saved'); ?>';
+                        } else {
+                            btn.classList.remove('btn-warning');
+                            btn.classList.add('btn-outline-secondary');
+                            textSpan.textContent = '<?php echo __('bookmark_save', 'Save'); ?>';
+                        }
+                    } else {
+                        console.error('Bookmark error:', data.error);
+                    }
+                } catch (error) {
+                    console.error('Bookmark error:', error);
                 }
-            } else {
-                console.error('Bookmark error:', data.error);
-            }
-        } catch (error) {
-            console.error('Bookmark error:', error);
+            });
         }
-    });
-}
-</script>
+    </script>
 <?php endif; ?>
 
 <?php

@@ -1,6 +1,7 @@
 <?php
+
 /**
- * EduBridge Rwanda - English Language File
+ * InkingiX Rwanda - English Language File
  */
 
 return [
@@ -23,7 +24,7 @@ return [
     'hero_cta' => 'Start Free Assessment',
     'hero_learn_more' => 'Learn More',
 
-    'features_title' => 'Why EduBridge Rwanda?',
+    'features_title' => 'Why InkingiX Rwanda?',
     'feature_1_title' => 'Career Discovery',
     'feature_1_desc' => 'Explore 50+ careers with detailed information about skills, education, and salaries in Rwanda.',
     'feature_2_title' => 'Interest Assessment',
@@ -286,4 +287,3 @@ return [
     'bookmark_save' => 'Save career',
     'bookmark_remove' => 'Remove bookmark',
 ];
-?>

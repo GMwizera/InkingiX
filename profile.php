@@ -1,9 +1,11 @@
 <?php
+
 /**
- * EduBridge Rwanda - User Profile
+ * InkingiX Rwanda - User Profile
  */
 
 $pageTitle = 'My Profile';
+$pageSubtitle = 'Manage your account settings and preferences';
 require_once 'includes/functions.php';
 
 // Handle language switch
@@ -125,13 +127,13 @@ require_once 'includes/header-dashboard.php';
             </div>
             <div class="card-body">
                 <?php if (!empty($errors)): ?>
-                <div class="alert alert-danger">
-                    <ul class="mb-0 ps-3">
-                        <?php foreach ($errors as $error): ?>
-                        <li><?php echo $error; ?></li>
-                        <?php endforeach; ?>
-                    </ul>
-                </div>
+                    <div class="alert alert-danger">
+                        <ul class="mb-0 ps-3">
+                            <?php foreach ($errors as $error): ?>
+                                <li><?php echo $error; ?></li>
+                            <?php endforeach; ?>
+                        </ul>
+                    </div>
                 <?php endif; ?>
 
                 <form method="POST">
@@ -144,12 +146,12 @@ require_once 'includes/header-dashboard.php';
                         <div class="col-md-6">
                             <label for="first_name" class="form-label"><?php echo __('register_first_name'); ?> <span class="text-danger">*</span></label>
                             <input type="text" class="form-control" id="first_name" name="first_name"
-                                   value="<?php echo htmlspecialchars($currentUser['first_name']); ?>" required>
+                                value="<?php echo htmlspecialchars($currentUser['first_name']); ?>" required>
                         </div>
                         <div class="col-md-6">
                             <label for="last_name" class="form-label"><?php echo __('register_last_name'); ?> <span class="text-danger">*</span></label>
                             <input type="text" class="form-control" id="last_name" name="last_name"
-                                   value="<?php echo htmlspecialchars($currentUser['last_name']); ?>" required>
+                                value="<?php echo htmlspecialchars($currentUser['last_name']); ?>" required>
                         </div>
                     </div>
 
@@ -166,15 +168,15 @@ require_once 'includes/header-dashboard.php';
                         <div class="col-md-6">
                             <label for="date_of_birth" class="form-label">Date of Birth</label>
                             <input type="date" class="form-control" id="date_of_birth" name="date_of_birth"
-                                   value="<?php echo $currentUser['date_of_birth']; ?>">
+                                value="<?php echo $currentUser['date_of_birth']; ?>">
                         </div>
                     </div>
 
                     <div class="mb-4">
                         <label for="phone" class="form-label">Phone Number</label>
                         <input type="tel" class="form-control" id="phone" name="phone"
-                               value="<?php echo htmlspecialchars($currentUser['phone'] ?? ''); ?>"
-                               placeholder="+250 7XX XXX XXX">
+                            value="<?php echo htmlspecialchars($currentUser['phone'] ?? ''); ?>"
+                            placeholder="+250 7XX XXX XXX">
                     </div>
 
                     <!-- School Information -->
@@ -186,10 +188,10 @@ require_once 'includes/header-dashboard.php';
                             <select class="form-select" id="school_name" name="school_name">
                                 <option value="">Select your school...</option>
                                 <?php foreach ($schools as $school): ?>
-                                <option value="<?php echo htmlspecialchars($school['name']); ?>"
+                                    <option value="<?php echo htmlspecialchars($school['name']); ?>"
                                         <?php echo $currentUser['school_name'] === $school['name'] ? 'selected' : ''; ?>>
-                                    <?php echo htmlspecialchars($school['name']); ?>
-                                </option>
+                                        <?php echo htmlspecialchars($school['name']); ?>
+                                    </option>
                                 <?php endforeach; ?>
                             </select>
                         </div>
@@ -198,9 +200,9 @@ require_once 'includes/header-dashboard.php';
                             <select class="form-select" id="grade_level" name="grade_level">
                                 <option value="">Select...</option>
                                 <?php foreach (['S1', 'S2', 'S3', 'S4', 'S5', 'S6'] as $grade): ?>
-                                <option value="<?php echo $grade; ?>" <?php echo $currentUser['grade_level'] === $grade ? 'selected' : ''; ?>>
-                                    <?php echo $grade; ?>
-                                </option>
+                                    <option value="<?php echo $grade; ?>" <?php echo $currentUser['grade_level'] === $grade ? 'selected' : ''; ?>>
+                                        <?php echo $grade; ?>
+                                    </option>
                                 <?php endforeach; ?>
                             </select>
                         </div>
@@ -221,7 +223,7 @@ require_once 'includes/header-dashboard.php';
                         <div class="col-md-6">
                             <label for="new_password" class="form-label">New Password</label>
                             <input type="password" class="form-control" id="new_password" name="new_password"
-                                   placeholder="Leave blank to keep current">
+                                placeholder="Leave blank to keep current">
                             <small class="text-muted">Minimum 6 characters</small>
                         </div>
                         <div class="col-md-6">

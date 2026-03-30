@@ -1,6 +1,6 @@
 Sprint 2 is complete and committed. Now begin Sprint 3.
 
-Read EduBridge_Rwanda_Master_Prompt.md before starting. Work in this exact order:
+Read InkingiX_Rwanda_Master_Prompt.md before starting. Work in this exact order:
 
 ═══════════════════════════════════════════
 TASK 1: compare.php — Side-by-side career comparison

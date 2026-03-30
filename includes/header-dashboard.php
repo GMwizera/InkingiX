@@ -1,6 +1,7 @@
 <?php
+
 /**
- * EduBridge Rwanda - Student Dashboard Header
+ * InkingiX Rwanda - Student Dashboard Header
  * Sidebar navigation for logged-in students
  */
 require_once __DIR__ . '/functions.php';
@@ -13,11 +14,15 @@ $initials = strtoupper(substr($currentUser['first_name'], 0, 1) . substr($curren
 ?>
 <!DOCTYPE html>
 <html lang="<?php echo $currentLang; ?>">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="<?php echo __('meta_description', 'EduBridge Rwanda - Career Discovery Platform for Rwandan Students'); ?>">
+    <meta name="description" content="<?php echo __('meta_description', 'InkingiX Rwanda - Career Discovery Platform for Rwandan Students'); ?>">
     <title><?php echo isset($pageTitle) ? $pageTitle . ' - ' : ''; ?><?php echo SITE_NAME; ?></title>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="assets/images/favicon.svg">
 
     <!-- Google Fonts - Roboto -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -31,6 +36,7 @@ $initials = strtoupper(substr($currentUser['first_name'], 0, 1) . substr($curren
     <!-- Custom CSS -->
     <link href="assets/css/style.css" rel="stylesheet">
 </head>
+
 <body>
     <div class="app-container">
         <!-- Sidebar Navigation -->
@@ -40,7 +46,7 @@ $initials = strtoupper(substr($currentUser['first_name'], 0, 1) . substr($curren
                     <div class="logo-icon">
                         <i class="fas fa-graduation-cap"></i>
                     </div>
-                    <span class="logo-text">EduBridge</span>
+                    <span class="logo-text">InkingiX</span>
                 </a>
             </div>
 
@@ -90,17 +96,12 @@ $initials = strtoupper(substr($currentUser['first_name'], 0, 1) . substr($curren
                 </a>
 
                 <?php if (hasRole(['school_admin', 'system_admin'])): ?>
-                <!-- Admin Panel -->
-                <a href="admin/index.php" class="nav-item" title="<?php echo __('nav_admin', 'Admin'); ?>">
-                    <i class="fas fa-shield-alt"></i>
-                    <span class="nav-label"><?php echo __('nav_admin', 'Admin'); ?></span>
-                </a>
+                    <!-- Admin Panel -->
+                    <a href="admin/index.php" class="nav-item" title="<?php echo __('nav_admin', 'Admin'); ?>">
+                        <i class="fas fa-shield-alt"></i>
+                        <span class="nav-label"><?php echo __('nav_admin', 'Admin'); ?></span>
+                    </a>
                 <?php endif; ?>
-
-                <!-- User Avatar -->
-                <a href="profile.php" class="user-avatar-sidebar" title="<?php echo htmlspecialchars($currentUser['first_name'] . ' ' . $currentUser['last_name']); ?>">
-                    <?php echo $initials; ?>
-                </a>
             </div>
         </aside>
 
@@ -126,11 +127,11 @@ $initials = strtoupper(substr($currentUser['first_name'], 0, 1) . substr($curren
                         </button>
                         <ul class="dropdown-menu dropdown-menu-end">
                             <li><a class="dropdown-item <?php echo $currentLang === 'en' ? 'active' : ''; ?>" href="?lang=en">
-                                <i class="fas fa-check me-2 <?php echo $currentLang === 'en' ? '' : 'invisible'; ?>"></i>English
-                            </a></li>
+                                    <i class="fas fa-check me-2 <?php echo $currentLang === 'en' ? '' : 'invisible'; ?>"></i>English
+                                </a></li>
                             <li><a class="dropdown-item <?php echo $currentLang === 'rw' ? 'active' : ''; ?>" href="?lang=rw">
-                                <i class="fas fa-check me-2 <?php echo $currentLang === 'rw' ? '' : 'invisible'; ?>"></i>Kinyarwanda
-                            </a></li>
+                                    <i class="fas fa-check me-2 <?php echo $currentLang === 'rw' ? '' : 'invisible'; ?>"></i>Kinyarwanda
+                                </a></li>
                         </ul>
                     </div>
 
@@ -148,7 +149,9 @@ $initials = strtoupper(substr($currentUser['first_name'], 0, 1) . substr($curren
                                 <strong><?php echo htmlspecialchars($currentUser['first_name'] . ' ' . $currentUser['last_name']); ?></strong>
                                 <br><small class="text-muted"><?php echo htmlspecialchars($currentUser['email']); ?></small>
                             </li>
-                            <li><hr class="dropdown-divider"></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
                             <li>
                                 <a class="dropdown-item" href="profile.php">
                                     <i class="fas fa-user me-2"></i><?php echo __('nav_profile', 'My Profile'); ?>
@@ -159,7 +162,9 @@ $initials = strtoupper(substr($currentUser['first_name'], 0, 1) . substr($curren
                                     <i class="fas fa-chart-bar me-2"></i><?php echo __('nav_results', 'My Results'); ?>
                                 </a>
                             </li>
-                            <li><hr class="dropdown-divider"></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
                             <li>
                                 <a class="dropdown-item text-danger" href="logout.php">
                                     <i class="fas fa-sign-out-alt me-2"></i><?php echo __('nav_logout', 'Logout'); ?>

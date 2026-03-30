@@ -1,6 +1,7 @@
 <?php
+
 /**
- * EduBridge Rwanda - Start/Resume Assessment Endpoint
+ * InkingiX Rwanda - Start/Resume Assessment Endpoint
  * Creates a new assessment or returns existing in-progress assessment
  */
 
@@ -92,7 +93,6 @@ try {
             'answered_count' => 0
         ]);
     }
-
 } catch (PDOException $e) {
     http_response_code(500);
     echo json_encode(['success' => false, 'error' => 'Database error']);

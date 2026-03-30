@@ -1,6 +1,7 @@
 <?php
+
 /**
- * EduBridge Rwanda - Unauthorized Access Page
+ * InkingiX Rwanda - Unauthorized Access Page
  */
 
 $pageTitle = 'Access Denied';

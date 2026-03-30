@@ -1,6 +1,7 @@
 <?php
+
 /**
- * EduBridge Rwanda - Get Assessment Progress
+ * InkingiX Rwanda - Get Assessment Progress
  * Returns current progress and adaptive mode status
  */
 
@@ -59,7 +60,6 @@ try {
         'top_categories' => $progress['top_categories'],
         'is_complete' => $progress['is_complete']
     ]);
-
 } catch (PDOException $e) {
     http_response_code(500);
     echo json_encode(['success' => false, 'error' => 'Database error']);

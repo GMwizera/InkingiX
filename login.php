@@ -1,6 +1,7 @@
 <?php
+
 /**
- * EduBridge Rwanda - Login Page
+ * InkingiX Rwanda - Login Page
  */
 
 $pageTitle = 'Login';
@@ -74,9 +75,9 @@ require_once 'includes/header.php';
                 </div>
 
                 <?php if ($error): ?>
-                <div class="alert alert-danger">
-                    <i class="fas fa-exclamation-circle me-2"></i><?php echo $error; ?>
-                </div>
+                    <div class="alert alert-danger">
+                        <i class="fas fa-exclamation-circle me-2"></i><?php echo $error; ?>
+                    </div>
                 <?php endif; ?>
 
                 <form method="POST" class="needs-validation" novalidate>
@@ -87,8 +88,8 @@ require_once 'includes/header.php';
                         <div class="input-group">
                             <span class="input-group-text"><i class="fas fa-envelope"></i></span>
                             <input type="email" class="form-control" id="email" name="email"
-                                   value="<?php echo htmlspecialchars($_POST['email'] ?? ''); ?>"
-                                   required autofocus>
+                                value="<?php echo htmlspecialchars($_POST['email'] ?? ''); ?>"
+                                required autofocus>
                         </div>
                     </div>
 
@@ -125,7 +126,7 @@ require_once 'includes/header.php';
             <div class="card-body">
                 <h6 class="card-title"><i class="fas fa-info-circle me-2"></i>Demo Accounts</h6>
                 <small class="text-muted">
-                    <strong>Admin:</strong> admin@edubridge.rw / admin123<br>
+                    <strong>Admin:</strong> admin@InkingiX.rw / admin123<br>
                     <em>Or register a new student account</em>
                 </small>
             </div>

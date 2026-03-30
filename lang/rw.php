@@ -1,6 +1,7 @@
 <?php
+
 /**
- * EduBridge Rwanda - Kinyarwanda Language File
+ * InkingiX Rwanda - Kinyarwanda Language File
  */
 
 return [
@@ -23,7 +24,7 @@ return [
     'hero_cta' => 'Tangira Isuzuma Kubuntu',
     'hero_learn_more' => 'Menya Byinshi',
 
-    'features_title' => 'Kuki EduBridge Rwanda?',
+    'features_title' => 'Kuki InkingiX Rwanda?',
     'feature_1_title' => 'Gushaka Umwuga',
     'feature_1_desc' => 'Shakisha imyuga irenga 50 hamwe n\'amakuru yuzuye ku bumenyi bukenewe, uburezi, n\'umushahara mu Rwanda.',
     'feature_2_title' => 'Isuzuma ry\'Ibyo Ukunda',
@@ -286,4 +287,3 @@ return [
     'bookmark_save' => 'Bika umwuga',
     'bookmark_remove' => 'Kuraho icyabitswe',
 ];
-?>

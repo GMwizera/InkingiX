@@ -1,13 +1,14 @@
 <?php
+
 /**
- * EduBridge Rwanda - Admin Questions Management
+ * InkingiX Rwanda - Admin Questions Management
  * System admin only
  */
 
-$pageTitle = __('admin_questions', 'Assessment Questions');
-
 require_once '../includes/functions.php';
 requireRole(['system_admin']);
+
+$pageTitle = __('admin_questions', 'Assessment Questions');
 
 $currentUser = getCurrentUser();
 $db = getDBConnection();
@@ -35,18 +36,18 @@ require_once 'includes/header-admin.php';
 <!-- Category Summary -->
 <div class="row mb-4">
     <?php foreach ($categories as $cat): ?>
-    <?php
-    $catQuestions = array_filter($questions, fn($q) => $q['category_id'] == $cat['id']);
-    ?>
-    <div class="col-md-2 mb-2">
-        <div class="card text-center">
-            <div class="card-body py-2">
-                <span class="badge category-badge-<?php echo $cat['code']; ?> mb-1"><?php echo $cat['code']; ?></span>
-                <div class="h5 mb-0"><?php echo count($catQuestions); ?></div>
-                <small class="text-muted"><?php echo $cat['name_en']; ?></small>
+        <?php
+        $catQuestions = array_filter($questions, fn($q) => $q['category_id'] == $cat['id']);
+        ?>
+        <div class="col-md-2 mb-2">
+            <div class="card text-center">
+                <div class="card-body py-2">
+                    <span class="badge category-badge-<?php echo $cat['code']; ?> mb-1"><?php echo $cat['code']; ?></span>
+                    <div class="h5 mb-0"><?php echo count($catQuestions); ?></div>
+                    <small class="text-muted"><?php echo $cat['name_en']; ?></small>
+                </div>
             </div>
         </div>
-    </div>
     <?php endforeach; ?>
 </div>
 
@@ -65,34 +66,34 @@ require_once 'includes/header-admin.php';
             </thead>
             <tbody>
                 <?php if (empty($questions)): ?>
-                <tr>
-                    <td colspan="5" class="text-center text-muted py-4">
-                        <?php echo __('admin_no_data_yet'); ?>
-                    </td>
-                </tr>
+                    <tr>
+                        <td colspan="5" class="text-center text-muted py-4">
+                            <?php echo __('admin_no_data_yet'); ?>
+                        </td>
+                    </tr>
                 <?php else: ?>
-                <?php foreach ($questions as $q): ?>
-                <tr>
-                    <td><?php echo $q['order_number']; ?></td>
-                    <td>
-                        <?php echo htmlspecialchars($q['question_en']); ?>
-                        <?php if ($q['question_rw']): ?>
-                        <br><small class="text-muted"><?php echo htmlspecialchars($q['question_rw']); ?></small>
-                        <?php endif; ?>
-                    </td>
-                    <td>
-                        <span class="badge category-badge-<?php echo $q['category_code']; ?>">
-                            <?php echo $q['category_name']; ?>
-                        </span>
-                    </td>
-                    <td><?php echo $q['weight']; ?></td>
-                    <td>
-                        <span class="badge bg-<?php echo $q['is_active'] ? 'success' : 'secondary'; ?>">
-                            <?php echo $q['is_active'] ? 'Active' : 'Inactive'; ?>
-                        </span>
-                    </td>
-                </tr>
-                <?php endforeach; ?>
+                    <?php foreach ($questions as $q): ?>
+                        <tr>
+                            <td><?php echo $q['order_number']; ?></td>
+                            <td>
+                                <?php echo htmlspecialchars($q['question_en']); ?>
+                                <?php if ($q['question_rw']): ?>
+                                    <br><small class="text-muted"><?php echo htmlspecialchars($q['question_rw']); ?></small>
+                                <?php endif; ?>
+                            </td>
+                            <td>
+                                <span class="badge category-badge-<?php echo $q['category_code']; ?>">
+                                    <?php echo $q['category_name']; ?>
+                                </span>
+                            </td>
+                            <td><?php echo $q['weight']; ?></td>
+                            <td>
+                                <span class="badge bg-<?php echo $q['is_active'] ? 'success' : 'secondary'; ?>">
+                                    <?php echo $q['is_active'] ? 'Active' : 'Inactive'; ?>
+                                </span>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
                 <?php endif; ?>
             </tbody>
         </table>

@@ -1,9 +1,11 @@
 <?php
+
 /**
- * EduBridge Rwanda - Careers List
+ * InkingiX Rwanda - Careers List
  */
 
 $pageTitle = 'Explore Careers';
+$pageSubtitle = 'Browse career paths matched to your interests and skills';
 require_once 'includes/functions.php';
 
 // Handle language switch
@@ -57,8 +59,7 @@ if (isLoggedIn()) {
 }
 ?>
 
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h2><i class="fas fa-briefcase me-2"></i><?php echo __('careers_title'); ?></h2>
+<div class="d-flex justify-content-end mb-4">
     <span class="badge bg-primary"><?php echo count($careers); ?> careers</span>
 </div>
 
@@ -70,17 +71,17 @@ if (isLoggedIn()) {
                 <div class="input-group">
                     <span class="input-group-text"><i class="fas fa-search"></i></span>
                     <input type="text" class="form-control" name="search"
-                           placeholder="<?php echo __('careers_search'); ?>"
-                           value="<?php echo htmlspecialchars($searchTerm); ?>">
+                        placeholder="<?php echo __('careers_search'); ?>"
+                        value="<?php echo htmlspecialchars($searchTerm); ?>">
                 </div>
             </div>
             <div class="col-md-4">
                 <select class="form-select" name="category">
                     <option value="0"><?php echo __('careers_all'); ?></option>
                     <?php foreach ($categories as $cat): ?>
-                    <option value="<?php echo $cat['id']; ?>" <?php echo $categoryFilter == $cat['id'] ? 'selected' : ''; ?>>
-                        <?php echo getLocalizedField($cat, 'name'); ?>
-                    </option>
+                        <option value="<?php echo $cat['id']; ?>" <?php echo $categoryFilter == $cat['id'] ? 'selected' : ''; ?>>
+                            <?php echo getLocalizedField($cat, 'name'); ?>
+                        </option>
                     <?php endforeach; ?>
                 </select>
             </div>
@@ -100,49 +101,49 @@ if (isLoggedIn()) {
             All
         </a>
         <?php foreach ($categories as $cat): ?>
-        <a href="careers.php?category=<?php echo $cat['id']; ?>"
-           class="btn btn-sm <?php echo $categoryFilter == $cat['id'] ? 'btn-primary' : 'btn-outline-primary'; ?>">
-            <i class="fas <?php echo $cat['icon']; ?> me-1"></i><?php echo getLocalizedField($cat, 'name'); ?>
-        </a>
+            <a href="careers.php?category=<?php echo $cat['id']; ?>"
+                class="btn btn-sm <?php echo $categoryFilter == $cat['id'] ? 'btn-primary' : 'btn-outline-primary'; ?>">
+                <i class="fas <?php echo $cat['icon']; ?> me-1"></i><?php echo getLocalizedField($cat, 'name'); ?>
+            </a>
         <?php endforeach; ?>
     </div>
 </div>
 
 <!-- Careers Grid -->
 <?php if (!empty($careers)): ?>
-<div class="row g-4">
-    <?php foreach ($careers as $career): ?>
-    <div class="col-md-6 col-lg-4">
-        <div class="card h-100 career-card" data-category="<?php echo $career['primary_category_id']; ?>">
-            <div class="card-body">
-                <div class="d-flex justify-content-between align-items-start mb-2">
-                    <span class="badge category-badge-<?php echo $career['category_code']; ?>">
-                        <?php echo $career['category_name']; ?>
-                    </span>
-                    <?php echo getDemandBadge($career['demand_level'] ?? 'growing'); ?>
-                </div>
-                <h5 class="card-title"><?php echo getLocalizedField($career, 'title'); ?></h5>
-                <p class="card-text text-muted small">
-                    <?php echo substr(getLocalizedField($career, 'description'), 0, 120); ?>...
-                </p>
-                <div class="salary-range small mb-3">
-                    <i class="fas fa-money-bill-wave me-1"></i>
-                    <?php echo formatCurrency($career['salary_range_min']); ?> - <?php echo formatCurrency($career['salary_range_max']); ?>/month
+    <div class="row g-4">
+        <?php foreach ($careers as $career): ?>
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100 career-card" data-category="<?php echo $career['primary_category_id']; ?>">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <span class="badge category-badge-<?php echo $career['category_code']; ?>">
+                                <?php echo $career['category_name']; ?>
+                            </span>
+                            <?php echo getDemandBadge($career['demand_level'] ?? 'growing'); ?>
+                        </div>
+                        <h5 class="card-title"><?php echo getLocalizedField($career, 'title'); ?></h5>
+                        <p class="card-text text-muted small">
+                            <?php echo substr(getLocalizedField($career, 'description'), 0, 120); ?>...
+                        </p>
+                        <div class="salary-range small mb-3">
+                            <i class="fas fa-money-bill-wave me-1"></i>
+                            <?php echo formatCurrency($career['salary_range_min']); ?> - <?php echo formatCurrency($career['salary_range_max']); ?>/month
+                        </div>
+                    </div>
+                    <div class="card-footer bg-transparent">
+                        <a href="career.php?id=<?php echo $career['id']; ?>" class="btn btn-outline-primary btn-sm w-100">
+                            <i class="fas fa-arrow-right me-1"></i>View Details
+                        </a>
+                    </div>
                 </div>
             </div>
-            <div class="card-footer bg-transparent">
-                <a href="career.php?id=<?php echo $career['id']; ?>" class="btn btn-outline-primary btn-sm w-100">
-                    <i class="fas fa-arrow-right me-1"></i>View Details
-                </a>
-            </div>
-        </div>
+        <?php endforeach; ?>
     </div>
-    <?php endforeach; ?>
-</div>
 <?php else: ?>
-<div class="alert alert-info">
-    <i class="fas fa-info-circle me-2"></i><?php echo __('careers_no_results'); ?>
-</div>
+    <div class="alert alert-info">
+        <i class="fas fa-info-circle me-2"></i><?php echo __('careers_no_results'); ?>
+    </div>
 <?php endif; ?>
 
 <?php

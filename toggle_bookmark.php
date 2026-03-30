@@ -1,6 +1,7 @@
 <?php
+
 /**
- * EduBridge Rwanda - Toggle Bookmark AJAX Endpoint
+ * InkingiX Rwanda - Toggle Bookmark AJAX Endpoint
  * Adds or removes a career from user's bookmarks
  */
 
@@ -74,7 +75,6 @@ try {
             'message' => __('bookmark_added', 'Career saved to bookmarks')
         ]);
     }
-
 } catch (PDOException $e) {
     http_response_code(500);
     echo json_encode(['success' => false, 'error' => 'Database error']);

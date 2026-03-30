@@ -1,6 +1,7 @@
 <?php
+
 /**
- * EduBridge Rwanda - Add Career (Admin)
+ * InkingiX Rwanda - Add Career (Admin)
  */
 
 require_once '../includes/functions.php';
@@ -44,4 +45,3 @@ try {
 
 header('Location: careers.php');
 exit;
-?>

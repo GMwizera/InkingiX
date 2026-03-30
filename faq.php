@@ -1,9 +1,11 @@
 <?php
+
 /**
- * EduBridge Rwanda - FAQ Page
+ * InkingiX Rwanda - FAQ Page
  */
 
 $pageTitle = 'Frequently Asked Questions';
+$pageSubtitle = 'Common questions about using InkingiX';
 require_once 'includes/functions.php';
 
 if (isset($_GET['lang'])) {
@@ -20,8 +22,6 @@ if (isLoggedIn()) {
 }
 ?>
 
-<h2 class="mb-4"><i class="fas fa-question-circle me-2"></i>Frequently Asked Questions</h2>
-
 <div class="row">
     <div class="col-lg-8">
         <div class="accordion" id="faqAccordion">
@@ -29,12 +29,12 @@ if (isLoggedIn()) {
             <div class="accordion-item">
                 <h2 class="accordion-header">
                     <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
-                        What is EduBridge Rwanda?
+                        What is InkingiX Rwanda?
                     </button>
                 </h2>
                 <div id="faq1" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
                     <div class="accordion-body">
-                        EduBridge Rwanda is a free web-based career discovery platform designed for Rwandan secondary school students (Senior 1-6). It helps students explore career options through an interest assessment questionnaire and provides information about careers, required skills, education pathways, and Rwandan educational institutions.
+                        InkingiX Rwanda is a free web-based career discovery platform designed for Rwandan secondary school students (Senior 1-6). It helps students explore career options through an interest assessment questionnaire and provides information about careers, required skills, education pathways, and Rwandan educational institutions.
                     </div>
                 </div>
             </div>
@@ -85,12 +85,12 @@ if (isLoggedIn()) {
             <div class="accordion-item">
                 <h2 class="accordion-header">
                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq5">
-                        Is EduBridge Rwanda free to use?
+                        Is InkingiX Rwanda free to use?
                     </button>
                 </h2>
                 <div id="faq5" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
                     <div class="accordion-body">
-                        Yes, EduBridge Rwanda is completely free for all Rwandan students. There are no hidden fees, subscriptions, or premium features. Our mission is to make career guidance accessible to every student, regardless of their financial situation.
+                        Yes, InkingiX Rwanda is completely free for all Rwandan students. There are no hidden fees, subscriptions, or premium features. Our mission is to make career guidance accessible to every student, regardless of their financial situation.
                     </div>
                 </div>
             </div>
@@ -113,12 +113,12 @@ if (isLoggedIn()) {
             <div class="accordion-item">
                 <h2 class="accordion-header">
                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq7">
-                        Can I use EduBridge on my phone?
+                        Can I use InkingiX on my phone?
                     </button>
                 </h2>
                 <div id="faq7" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
                     <div class="accordion-body">
-                        Yes! EduBridge Rwanda is fully responsive and works on smartphones, tablets, laptops, and desktop computers. We've optimized the platform for low-bandwidth connections common in Rwanda, so you can use it even with limited internet access.
+                        Yes! InkingiX Rwanda is fully responsive and works on smartphones, tablets, laptops, and desktop computers. We've optimized the platform for low-bandwidth connections common in Rwanda, so you can use it even with limited internet access.
                     </div>
                 </div>
             </div>
@@ -132,7 +132,7 @@ if (isLoggedIn()) {
                 </h2>
                 <div id="faq8" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
                     <div class="accordion-body">
-                        Yes! EduBridge Rwanda supports both English and Kinyarwanda. You can switch languages using the language toggle in the navigation menu. All content, including assessment questions and career information, is available in both languages.
+                        Yes! InkingiX Rwanda supports both English and Kinyarwanda. You can switch languages using the language toggle in the navigation menu. All content, including assessment questions and career information, is available in both languages.
                     </div>
                 </div>
             </div>
@@ -155,12 +155,12 @@ if (isLoggedIn()) {
             <div class="accordion-item">
                 <h2 class="accordion-header">
                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq10">
-                        How can my school use EduBridge Rwanda?
+                        How can my school use InkingiX Rwanda?
                     </button>
                 </h2>
                 <div id="faq10" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
                     <div class="accordion-body">
-                        Schools can request a school administrator account to view aggregate statistics about student assessments (without individual data). Career guidance counselors can use the platform during guidance sessions. Contact us at info@edubridge.rw to set up your school's account.
+                        Schools can request a school administrator account to view aggregate statistics about student assessments (without individual data). Career guidance counselors can use the platform during guidance sessions. Contact us at info@InkingiX.rw to set up your school's account.
                     </div>
                 </div>
             </div>
@@ -174,7 +174,7 @@ if (isLoggedIn()) {
                 <i class="fas fa-headset fa-3x text-primary mb-3"></i>
                 <h5>Still have questions?</h5>
                 <p class="text-muted">Our support team is here to help you.</p>
-                <a href="mailto:info@edubridge.rw" class="btn btn-primary">
+                <a href="mailto:info@InkingiX.rw" class="btn btn-primary">
                     <i class="fas fa-envelope me-2"></i>Contact Us
                 </a>
             </div>

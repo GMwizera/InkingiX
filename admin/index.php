@@ -1,6 +1,7 @@
 <?php
+
 /**
- * EduBridge Rwanda - Admin Dashboard
+ * InkingiX Rwanda - Admin Dashboard
  * School-scoped for school_admin, global view with filter for system_admin
  */
 
@@ -62,7 +63,8 @@ $stats['students'] = $stmt->fetch()['count'];
 
 // Total completed assessments (filtered by school)
 if ($schoolFilter) {
-    $stmt = $db->prepare("
+    $stmt = $db->prepare(
+        "
         SELECT COUNT(*) as count
         FROM user_assessments ua
         JOIN users u ON ua.user_id = u.id
@@ -85,7 +87,8 @@ $stats['institutions'] = $stmt->fetch()['count'];
 // Assessments this month (filtered by school)
 $currentMonth = date('Y-m-01');
 if ($schoolFilter) {
-    $stmt = $db->prepare("
+    $stmt = $db->prepare(
+        "
         SELECT COUNT(*) as count
         FROM user_assessments ua
         JOIN users u ON ua.user_id = u.id
@@ -107,7 +110,7 @@ if ($schoolFilter) {
         JOIN careers c ON cm.career_id = c.id
         JOIN user_assessments ua ON cm.assessment_id = ua.id
         JOIN users u ON ua.user_id = u.id
-        WHERE cm.rank = 1 AND u.school_name = ?
+        WHERE cm.rank_order = 1 AND u.school_name = ?
         GROUP BY c.id
         ORDER BY interest_count DESC
         LIMIT 5
@@ -118,7 +121,7 @@ if ($schoolFilter) {
         SELECT c.id, c.title_en, c.title_rw, c.demand_level, COUNT(*) AS interest_count
         FROM career_matches cm
         JOIN careers c ON cm.career_id = c.id
-        WHERE cm.rank = 1
+        WHERE cm.rank_order = 1
         GROUP BY c.id
         ORDER BY interest_count DESC
         LIMIT 5
@@ -132,7 +135,8 @@ $gradeDistribution = [];
 $grades = ['S1', 'S2', 'S3', 'S4', 'S5', 'S6'];
 foreach ($grades as $grade) {
     if ($schoolFilter) {
-        $stmt = $db->prepare("
+        $stmt = $db->prepare(
+            "
             SELECT COUNT(*) as count
             FROM users u
             WHERE grade_level = ? AND role = 'student' AND is_active = 1" . $schoolWhere
@@ -231,6 +235,7 @@ $categoryColors = [
 ?>
 <!DOCTYPE html>
 <html lang="<?php echo getCurrentLanguage(); ?>">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -245,16 +250,19 @@ $categoryColors = [
             flex-direction: column;
             gap: 12px;
         }
+
         .css-chart-bar {
             display: flex;
             align-items: center;
             gap: 12px;
         }
+
         .css-chart-label {
             min-width: 80px;
             font-size: 0.875rem;
             font-weight: 500;
         }
+
         .css-chart-bar-container {
             flex: 1;
             height: 24px;
@@ -263,6 +271,7 @@ $categoryColors = [
             overflow: hidden;
             position: relative;
         }
+
         .css-chart-bar-fill {
             height: 100%;
             border-radius: 4px;
@@ -273,12 +282,14 @@ $categoryColors = [
             padding-right: 8px;
             min-width: 30px;
         }
+
         .css-chart-bar-value {
             font-size: 0.75rem;
             font-weight: 600;
             color: white;
-            text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
         }
+
         .css-chart-bar-value-outside {
             position: absolute;
             right: -35px;
@@ -288,12 +299,29 @@ $categoryColors = [
         }
 
         /* Grade distribution colors */
-        .grade-s1 { background: #667eea; }
-        .grade-s2 { background: #f093fb; }
-        .grade-s3 { background: #4facfe; }
-        .grade-s4 { background: #43e97b; }
-        .grade-s5 { background: #fa709a; }
-        .grade-s6 { background: #a18cd1; }
+        .grade-s1 {
+            background: #667eea;
+        }
+
+        .grade-s2 {
+            background: #f093fb;
+        }
+
+        .grade-s3 {
+            background: #4facfe;
+        }
+
+        .grade-s4 {
+            background: #43e97b;
+        }
+
+        .grade-s5 {
+            background: #fa709a;
+        }
+
+        .grade-s6 {
+            background: #a18cd1;
+        }
 
         /* Interest cluster donut-style display */
         .interest-cluster-item {
@@ -302,9 +330,11 @@ $categoryColors = [
             padding: 8px 0;
             border-bottom: 1px solid #e9ecef;
         }
+
         .interest-cluster-item:last-child {
             border-bottom: none;
         }
+
         .interest-cluster-icon {
             width: 36px;
             height: 36px;
@@ -316,13 +346,16 @@ $categoryColors = [
             margin-right: 12px;
             font-size: 0.875rem;
         }
+
         .interest-cluster-info {
             flex: 1;
         }
+
         .interest-cluster-name {
             font-weight: 500;
             font-size: 0.875rem;
         }
+
         .interest-cluster-bar {
             height: 6px;
             background: #e9ecef;
@@ -330,11 +363,13 @@ $categoryColors = [
             margin-top: 4px;
             overflow: hidden;
         }
+
         .interest-cluster-fill {
             height: 100%;
             border-radius: 3px;
             transition: width 0.5s ease-out;
         }
+
         .interest-cluster-percentage {
             font-weight: 600;
             font-size: 0.875rem;
@@ -350,11 +385,13 @@ $categoryColors = [
             padding: 20px;
             text-align: center;
         }
+
         .stat-highlight-number {
             font-size: 2.5rem;
             font-weight: 700;
             line-height: 1;
         }
+
         .stat-highlight-label {
             font-size: 0.875rem;
             opacity: 0.9;
@@ -367,11 +404,13 @@ $categoryColors = [
             align-items: center;
             gap: 8px;
         }
+
         .school-filter-form select {
             min-width: 200px;
         }
     </style>
 </head>
+
 <body>
     <!-- Admin Navbar -->
     <nav class="navbar navbar-dark bg-dark">
@@ -388,11 +427,11 @@ $categoryColors = [
                     </button>
                     <ul class="dropdown-menu dropdown-menu-end">
                         <li><a class="dropdown-item <?php echo getCurrentLanguage() === 'en' ? 'active' : ''; ?>" href="?lang=en<?php echo $selectedSchool ? '&school=' . urlencode($selectedSchool) : ''; ?>">
-                            <i class="fas fa-check me-2 <?php echo getCurrentLanguage() === 'en' ? '' : 'invisible'; ?>"></i>English
-                        </a></li>
+                                <i class="fas fa-check me-2 <?php echo getCurrentLanguage() === 'en' ? '' : 'invisible'; ?>"></i>English
+                            </a></li>
                         <li><a class="dropdown-item <?php echo getCurrentLanguage() === 'rw' ? 'active' : ''; ?>" href="?lang=rw<?php echo $selectedSchool ? '&school=' . urlencode($selectedSchool) : ''; ?>">
-                            <i class="fas fa-check me-2 <?php echo getCurrentLanguage() === 'rw' ? '' : 'invisible'; ?>"></i>Kinyarwanda
-                        </a></li>
+                                <i class="fas fa-check me-2 <?php echo getCurrentLanguage() === 'rw' ? '' : 'invisible'; ?>"></i>Kinyarwanda
+                            </a></li>
                     </ul>
                 </div>
 
@@ -409,10 +448,12 @@ $categoryColors = [
                             <strong><?php echo htmlspecialchars($currentUser['first_name'] . ' ' . $currentUser['last_name']); ?></strong>
                             <br><small class="text-muted"><?php echo $currentUser['role'] === 'system_admin' ? __('admin_system_admin') : __('admin_school_admin'); ?></small>
                             <?php if ($currentUser['role'] === 'school_admin' && !empty($currentUser['school_name'])): ?>
-                            <br><small class="text-muted"><?php echo htmlspecialchars($currentUser['school_name']); ?></small>
+                                <br><small class="text-muted"><?php echo htmlspecialchars($currentUser['school_name']); ?></small>
                             <?php endif; ?>
                         </li>
-                        <li><hr class="dropdown-divider"></li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
                         <li>
                             <a class="dropdown-item" href="../profile.php">
                                 <i class="fas fa-user me-2"></i><?php echo __('nav_profile'); ?>
@@ -423,7 +464,9 @@ $categoryColors = [
                                 <i class="fas fa-home me-2"></i><?php echo __('nav_home'); ?>
                             </a>
                         </li>
-                        <li><hr class="dropdown-divider"></li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
                         <li>
                             <a class="dropdown-item text-danger" href="../logout.php">
                                 <i class="fas fa-sign-out-alt me-2"></i><?php echo __('nav_logout'); ?>
@@ -449,45 +492,45 @@ $categoryColors = [
                         </li>
 
                         <?php if ($currentUser['role'] === 'system_admin'): ?>
-                        <!-- System Admin Navigation -->
-                        <li class="nav-item">
-                            <a class="nav-link" href="careers.php">
-                                <i class="fas fa-briefcase"></i> <?php echo __('nav_careers'); ?>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="reports.php">
-                                <i class="fas fa-chart-bar"></i> <?php echo __('admin_reports'); ?>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="users.php">
-                                <i class="fas fa-users"></i> <?php echo __('admin_users'); ?>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="institutions.php">
-                                <i class="fas fa-university"></i> <?php echo __('nav_institutions'); ?>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="questions.php">
-                                <i class="fas fa-question-circle"></i> <?php echo __('admin_questions'); ?>
-                            </a>
-                        </li>
+                            <!-- System Admin Navigation -->
+                            <li class="nav-item">
+                                <a class="nav-link" href="careers.php">
+                                    <i class="fas fa-briefcase"></i> <?php echo __('nav_careers'); ?>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="reports.php">
+                                    <i class="fas fa-chart-bar"></i> <?php echo __('admin_reports'); ?>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="users.php">
+                                    <i class="fas fa-users"></i> <?php echo __('admin_users'); ?>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="institutions.php">
+                                    <i class="fas fa-university"></i> <?php echo __('nav_institutions'); ?>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="questions.php">
+                                    <i class="fas fa-question-circle"></i> <?php echo __('admin_questions'); ?>
+                                </a>
+                            </li>
 
                         <?php else: ?>
-                        <!-- School Admin Navigation -->
-                        <li class="nav-item">
-                            <a class="nav-link" href="reports.php">
-                                <i class="fas fa-chart-bar"></i> <?php echo __('admin_reports'); ?>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="users.php">
-                                <i class="fas fa-users"></i> <?php echo __('admin_students', 'Students'); ?>
-                            </a>
-                        </li>
+                            <!-- School Admin Navigation -->
+                            <li class="nav-item">
+                                <a class="nav-link" href="reports.php">
+                                    <i class="fas fa-chart-bar"></i> <?php echo __('admin_reports'); ?>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="users.php">
+                                    <i class="fas fa-users"></i> <?php echo __('admin_students', 'Students'); ?>
+                                </a>
+                            </li>
                         <?php endif; ?>
                     </ul>
                 </div>
@@ -499,28 +542,28 @@ $categoryColors = [
                     <div>
                         <h2 class="mb-1"><?php echo __('admin_dashboard'); ?></h2>
                         <?php if ($selectedSchool): ?>
-                        <p class="text-muted mb-0">
-                            <i class="fas fa-school me-1"></i>
-                            <?php echo htmlspecialchars($selectedSchool); ?>
-                        </p>
+                            <p class="text-muted mb-0">
+                                <i class="fas fa-school me-1"></i>
+                                <?php echo htmlspecialchars($selectedSchool); ?>
+                            </p>
                         <?php endif; ?>
                     </div>
                     <div class="d-flex align-items-center gap-3">
                         <?php if ($currentUser['role'] === 'system_admin' && !empty($allSchools)): ?>
-                        <!-- School Filter Dropdown -->
-                        <form method="GET" class="school-filter-form">
-                            <label for="school" class="form-label mb-0 text-muted small">
-                                <i class="fas fa-filter me-1"></i><?php echo __('admin_filter_school'); ?>:
-                            </label>
-                            <select name="school" id="school" class="form-select form-select-sm" onchange="this.form.submit()">
-                                <option value="all"><?php echo __('admin_all_schools'); ?></option>
-                                <?php foreach ($allSchools as $school): ?>
-                                <option value="<?php echo htmlspecialchars($school); ?>" <?php echo $selectedSchool === $school ? 'selected' : ''; ?>>
-                                    <?php echo htmlspecialchars($school); ?>
-                                </option>
-                                <?php endforeach; ?>
-                            </select>
-                        </form>
+                            <!-- School Filter Dropdown -->
+                            <form method="GET" class="school-filter-form">
+                                <label for="school" class="form-label mb-0 text-muted small">
+                                    <i class="fas fa-filter me-1"></i><?php echo __('admin_filter_school'); ?>:
+                                </label>
+                                <select name="school" id="school" class="form-select form-select-sm" onchange="this.form.submit()">
+                                    <option value="all"><?php echo __('admin_all_schools'); ?></option>
+                                    <?php foreach ($allSchools as $school): ?>
+                                        <option value="<?php echo htmlspecialchars($school); ?>" <?php echo $selectedSchool === $school ? 'selected' : ''; ?>>
+                                            <?php echo htmlspecialchars($school); ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </form>
                         <?php endif; ?>
                         <span class="badge bg-info"><?php echo $currentUser['role'] === 'system_admin' ? __('admin_system_admin') : __('admin_school_admin'); ?></span>
                     </div>
@@ -595,29 +638,29 @@ $categoryColors = [
                             </div>
                             <div class="card-body">
                                 <?php if (!empty($topCareers)): ?>
-                                <p class="text-muted small mb-3"><?php echo __('admin_top_careers_desc'); ?></p>
-                                <div class="css-chart">
-                                    <?php foreach ($topCareers as $index => $career):
-                                        $percentage = ($career['interest_count'] / $maxCareerCount) * 100;
-                                    ?>
-                                    <div class="css-chart-bar">
-                                        <span class="css-chart-label">
-                                            <span class="badge bg-secondary me-1">#<?php echo $index + 1; ?></span>
-                                            <?php echo htmlspecialchars(getLocalizedField($career, 'title')); ?>
-                                        </span>
-                                    </div>
-                                    <div class="d-flex align-items-center gap-2 ps-3 mb-2">
-                                        <div class="css-chart-bar-container" style="max-width: 300px;">
-                                            <div class="css-chart-bar-fill bg-primary" style="width: <?php echo $percentage; ?>%">
-                                                <span class="css-chart-bar-value"><?php echo $career['interest_count']; ?></span>
+                                    <p class="text-muted small mb-3"><?php echo __('admin_top_careers_desc'); ?></p>
+                                    <div class="css-chart">
+                                        <?php foreach ($topCareers as $index => $career):
+                                            $percentage = ($career['interest_count'] / $maxCareerCount) * 100;
+                                        ?>
+                                            <div class="css-chart-bar">
+                                                <span class="css-chart-label">
+                                                    <span class="badge bg-secondary me-1">#<?php echo $index + 1; ?></span>
+                                                    <?php echo htmlspecialchars(getLocalizedField($career, 'title')); ?>
+                                                </span>
                                             </div>
-                                        </div>
-                                        <?php echo getDemandBadge($career['demand_level'] ?? 'growing'); ?>
+                                            <div class="d-flex align-items-center gap-2 ps-3 mb-2">
+                                                <div class="css-chart-bar-container" style="max-width: 300px;">
+                                                    <div class="css-chart-bar-fill bg-primary" style="width: <?php echo $percentage; ?>%">
+                                                        <span class="css-chart-bar-value"><?php echo $career['interest_count']; ?></span>
+                                                    </div>
+                                                </div>
+                                                <?php echo getDemandBadge($career['demand_level'] ?? 'growing'); ?>
+                                            </div>
+                                        <?php endforeach; ?>
                                     </div>
-                                    <?php endforeach; ?>
-                                </div>
                                 <?php else: ?>
-                                <p class="text-muted mb-0"><?php echo __('admin_no_data_yet'); ?></p>
+                                    <p class="text-muted mb-0"><?php echo __('admin_no_data_yet'); ?></p>
                                 <?php endif; ?>
                             </div>
                         </div>
@@ -669,16 +712,16 @@ $categoryColors = [
                                         $percentage = $maxGradeCount > 0 ? ($count / $maxGradeCount) * 100 : 0;
                                         $gradeClass = 'grade-' . strtolower($grade);
                                     ?>
-                                    <div class="css-chart-bar">
-                                        <span class="css-chart-label" style="min-width: 35px;"><?php echo $grade; ?></span>
-                                        <div class="css-chart-bar-container" style="position: relative;">
-                                            <div class="css-chart-bar-fill <?php echo $gradeClass; ?>" style="width: <?php echo max($percentage, 5); ?>%">
-                                                <?php if ($count > 0): ?>
-                                                <span class="css-chart-bar-value"><?php echo $count; ?></span>
-                                                <?php endif; ?>
+                                        <div class="css-chart-bar">
+                                            <span class="css-chart-label" style="min-width: 35px;"><?php echo $grade; ?></span>
+                                            <div class="css-chart-bar-container" style="position: relative;">
+                                                <div class="css-chart-bar-fill <?php echo $gradeClass; ?>" style="width: <?php echo max($percentage, 5); ?>%">
+                                                    <?php if ($count > 0): ?>
+                                                        <span class="css-chart-bar-value"><?php echo $count; ?></span>
+                                                    <?php endif; ?>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
                                     <?php endforeach; ?>
                                 </div>
                             </div>
@@ -699,29 +742,29 @@ $categoryColors = [
                             </div>
                             <div class="card-body">
                                 <?php if (!empty($interestClusters)): ?>
-                                <p class="text-muted small mb-3"><?php echo __('admin_riasec_desc'); ?></p>
-                                <?php foreach ($interestClusters as $cluster):
-                                    $percentage = $totalAvgScore > 0 ? ($cluster['avg_score'] / $totalAvgScore) * 100 : 0;
-                                    $color = $categoryColors[$cluster['code']] ?? '#6c757d';
-                                ?>
-                                <div class="interest-cluster-item">
-                                    <div class="interest-cluster-icon" style="background: <?php echo $color; ?>">
-                                        <i class="fas <?php echo $cluster['icon'] ?? 'fa-circle'; ?>"></i>
-                                    </div>
-                                    <div class="interest-cluster-info">
-                                        <div class="interest-cluster-name">
-                                            <?php echo htmlspecialchars(getLocalizedField($cluster, 'name')); ?>
-                                            <span class="badge bg-light text-dark ms-1"><?php echo $cluster['code']; ?></span>
+                                    <p class="text-muted small mb-3"><?php echo __('admin_riasec_desc'); ?></p>
+                                    <?php foreach ($interestClusters as $cluster):
+                                        $percentage = $totalAvgScore > 0 ? ($cluster['avg_score'] / $totalAvgScore) * 100 : 0;
+                                        $color = $categoryColors[$cluster['code']] ?? '#6c757d';
+                                    ?>
+                                        <div class="interest-cluster-item">
+                                            <div class="interest-cluster-icon" style="background: <?php echo $color; ?>">
+                                                <i class="fas <?php echo $cluster['icon'] ?? 'fa-circle'; ?>"></i>
+                                            </div>
+                                            <div class="interest-cluster-info">
+                                                <div class="interest-cluster-name">
+                                                    <?php echo htmlspecialchars(getLocalizedField($cluster, 'name')); ?>
+                                                    <span class="badge bg-light text-dark ms-1"><?php echo $cluster['code']; ?></span>
+                                                </div>
+                                                <div class="interest-cluster-bar">
+                                                    <div class="interest-cluster-fill" style="width: <?php echo $percentage; ?>%; background: <?php echo $color; ?>;"></div>
+                                                </div>
+                                            </div>
+                                            <span class="interest-cluster-percentage"><?php echo number_format($percentage, 1); ?>%</span>
                                         </div>
-                                        <div class="interest-cluster-bar">
-                                            <div class="interest-cluster-fill" style="width: <?php echo $percentage; ?>%; background: <?php echo $color; ?>;"></div>
-                                        </div>
-                                    </div>
-                                    <span class="interest-cluster-percentage"><?php echo number_format($percentage, 1); ?>%</span>
-                                </div>
-                                <?php endforeach; ?>
+                                    <?php endforeach; ?>
                                 <?php else: ?>
-                                <p class="text-muted mb-0"><?php echo __('admin_no_data_yet'); ?></p>
+                                    <p class="text-muted mb-0"><?php echo __('admin_no_data_yet'); ?></p>
                                 <?php endif; ?>
                             </div>
                         </div>
@@ -751,15 +794,17 @@ $categoryColors = [
                                             </thead>
                                             <tbody>
                                                 <?php if (!empty($recentUsers)): ?>
-                                                <?php foreach ($recentUsers as $user): ?>
-                                                <tr>
-                                                    <td><?php echo htmlspecialchars($user['first_name'] . ' ' . $user['last_name']); ?></td>
-                                                    <td><small><?php echo htmlspecialchars($user['school_name'] ?? '-'); ?></small></td>
-                                                    <td><small><?php echo date('M j', strtotime($user['created_at'])); ?></small></td>
-                                                </tr>
-                                                <?php endforeach; ?>
+                                                    <?php foreach ($recentUsers as $user): ?>
+                                                        <tr>
+                                                            <td><?php echo htmlspecialchars($user['first_name'] . ' ' . $user['last_name']); ?></td>
+                                                            <td><small><?php echo htmlspecialchars($user['school_name'] ?? '-'); ?></small></td>
+                                                            <td><small><?php echo date('M j', strtotime($user['created_at'])); ?></small></td>
+                                                        </tr>
+                                                    <?php endforeach; ?>
                                                 <?php else: ?>
-                                                <tr><td colspan="3" class="text-muted text-center"><?php echo __('admin_no_data_yet'); ?></td></tr>
+                                                    <tr>
+                                                        <td colspan="3" class="text-muted text-center"><?php echo __('admin_no_data_yet'); ?></td>
+                                                    </tr>
                                                 <?php endif; ?>
                                             </tbody>
                                         </table>
@@ -788,15 +833,17 @@ $categoryColors = [
                                             </thead>
                                             <tbody>
                                                 <?php if (!empty($recentAssessments)): ?>
-                                                <?php foreach ($recentAssessments as $assessment): ?>
-                                                <tr>
-                                                    <td><?php echo htmlspecialchars($assessment['first_name'] . ' ' . $assessment['last_name']); ?></td>
-                                                    <td><small><?php echo htmlspecialchars($assessment['school_name'] ?? '-'); ?></small></td>
-                                                    <td><small><?php echo date('M j', strtotime($assessment['completed_at'])); ?></small></td>
-                                                </tr>
-                                                <?php endforeach; ?>
+                                                    <?php foreach ($recentAssessments as $assessment): ?>
+                                                        <tr>
+                                                            <td><?php echo htmlspecialchars($assessment['first_name'] . ' ' . $assessment['last_name']); ?></td>
+                                                            <td><small><?php echo htmlspecialchars($assessment['school_name'] ?? '-'); ?></small></td>
+                                                            <td><small><?php echo date('M j', strtotime($assessment['completed_at'])); ?></small></td>
+                                                        </tr>
+                                                    <?php endforeach; ?>
                                                 <?php else: ?>
-                                                <tr><td colspan="3" class="text-muted text-center"><?php echo __('admin_no_data_yet'); ?></td></tr>
+                                                    <tr>
+                                                        <td colspan="3" class="text-muted text-center"><?php echo __('admin_no_data_yet'); ?></td>
+                                                    </tr>
                                                 <?php endif; ?>
                                             </tbody>
                                         </table>
@@ -812,4 +859,5 @@ $categoryColors = [
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>

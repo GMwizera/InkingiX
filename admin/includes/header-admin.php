@@ -1,6 +1,7 @@
 <?php
+
 /**
- * EduBridge Rwanda - Admin Header
+ * InkingiX Rwanda - Admin Header
  * Shared navigation for admin panel
  *
  * Note: functions.php should be included by the calling page before this header
@@ -23,15 +24,19 @@ $selectedSchool = isset($_GET['school']) && $_GET['school'] !== 'all' ? $_GET['s
 ?>
 <!DOCTYPE html>
 <html lang="<?php echo getCurrentLanguage(); ?>">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo isset($pageTitle) ? $pageTitle . ' - ' : ''; ?><?php echo SITE_NAME; ?> <?php echo __('nav_admin'); ?></title>
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="../assets/images/favicon.svg">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
     <link href="../assets/css/style.css" rel="stylesheet">
     <?php if (isset($extraStyles)) echo $extraStyles; ?>
 </head>
+
 <body>
     <!-- Admin Navbar -->
     <nav class="navbar navbar-dark bg-dark">
@@ -48,11 +53,11 @@ $selectedSchool = isset($_GET['school']) && $_GET['school'] !== 'all' ? $_GET['s
                     </button>
                     <ul class="dropdown-menu dropdown-menu-end">
                         <li><a class="dropdown-item <?php echo getCurrentLanguage() === 'en' ? 'active' : ''; ?>" href="?lang=en<?php echo $selectedSchool ? '&school=' . urlencode($selectedSchool) : ''; ?>">
-                            <i class="fas fa-check me-2 <?php echo getCurrentLanguage() === 'en' ? '' : 'invisible'; ?>"></i>English
-                        </a></li>
+                                <i class="fas fa-check me-2 <?php echo getCurrentLanguage() === 'en' ? '' : 'invisible'; ?>"></i>English
+                            </a></li>
                         <li><a class="dropdown-item <?php echo getCurrentLanguage() === 'rw' ? 'active' : ''; ?>" href="?lang=rw<?php echo $selectedSchool ? '&school=' . urlencode($selectedSchool) : ''; ?>">
-                            <i class="fas fa-check me-2 <?php echo getCurrentLanguage() === 'rw' ? '' : 'invisible'; ?>"></i>Kinyarwanda
-                        </a></li>
+                                <i class="fas fa-check me-2 <?php echo getCurrentLanguage() === 'rw' ? '' : 'invisible'; ?>"></i>Kinyarwanda
+                            </a></li>
                     </ul>
                 </div>
 
@@ -69,10 +74,12 @@ $selectedSchool = isset($_GET['school']) && $_GET['school'] !== 'all' ? $_GET['s
                             <strong><?php echo htmlspecialchars($currentUser['first_name'] . ' ' . $currentUser['last_name']); ?></strong>
                             <br><small class="text-muted"><?php echo $currentUser['role'] === 'system_admin' ? __('admin_system_admin') : __('admin_school_admin'); ?></small>
                             <?php if ($currentUser['role'] === 'school_admin' && !empty($currentUser['school_name'])): ?>
-                            <br><small class="text-muted"><?php echo htmlspecialchars($currentUser['school_name']); ?></small>
+                                <br><small class="text-muted"><?php echo htmlspecialchars($currentUser['school_name']); ?></small>
                             <?php endif; ?>
                         </li>
-                        <li><hr class="dropdown-divider"></li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
                         <li>
                             <a class="dropdown-item" href="../profile.php">
                                 <i class="fas fa-user me-2"></i><?php echo __('nav_profile'); ?>
@@ -83,7 +90,9 @@ $selectedSchool = isset($_GET['school']) && $_GET['school'] !== 'all' ? $_GET['s
                                 <i class="fas fa-home me-2"></i><?php echo __('nav_home'); ?>
                             </a>
                         </li>
-                        <li><hr class="dropdown-divider"></li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
                         <li>
                             <a class="dropdown-item text-danger" href="../logout.php">
                                 <i class="fas fa-sign-out-alt me-2"></i><?php echo __('nav_logout'); ?>
@@ -109,45 +118,45 @@ $selectedSchool = isset($_GET['school']) && $_GET['school'] !== 'all' ? $_GET['s
                         </li>
 
                         <?php if ($currentUser['role'] === 'system_admin'): ?>
-                        <!-- System Admin Navigation -->
-                        <li class="nav-item">
-                            <a class="nav-link <?php echo in_array($currentAdminPage, ['careers', 'career-add', 'career-edit']) ? 'active' : ''; ?>" href="careers.php">
-                                <i class="fas fa-briefcase"></i> <?php echo __('nav_careers'); ?>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link <?php echo $currentAdminPage === 'reports' ? 'active' : ''; ?>" href="reports.php">
-                                <i class="fas fa-chart-bar"></i> <?php echo __('admin_reports'); ?>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link <?php echo $currentAdminPage === 'users' ? 'active' : ''; ?>" href="users.php">
-                                <i class="fas fa-users"></i> <?php echo __('admin_users'); ?>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link <?php echo in_array($currentAdminPage, ['institutions', 'institution-add', 'institution-edit']) ? 'active' : ''; ?>" href="institutions.php">
-                                <i class="fas fa-university"></i> <?php echo __('nav_institutions'); ?>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link <?php echo $currentAdminPage === 'questions' ? 'active' : ''; ?>" href="questions.php">
-                                <i class="fas fa-question-circle"></i> <?php echo __('admin_questions'); ?>
-                            </a>
-                        </li>
+                            <!-- System Admin Navigation -->
+                            <li class="nav-item">
+                                <a class="nav-link <?php echo in_array($currentAdminPage, ['careers', 'career-add', 'career-edit']) ? 'active' : ''; ?>" href="careers.php">
+                                    <i class="fas fa-briefcase"></i> <?php echo __('nav_careers'); ?>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link <?php echo $currentAdminPage === 'reports' ? 'active' : ''; ?>" href="reports.php">
+                                    <i class="fas fa-chart-bar"></i> <?php echo __('admin_reports'); ?>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link <?php echo $currentAdminPage === 'users' ? 'active' : ''; ?>" href="users.php">
+                                    <i class="fas fa-users"></i> <?php echo __('admin_users'); ?>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link <?php echo in_array($currentAdminPage, ['institutions', 'institution-add', 'institution-edit']) ? 'active' : ''; ?>" href="institutions.php">
+                                    <i class="fas fa-university"></i> <?php echo __('nav_institutions'); ?>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link <?php echo $currentAdminPage === 'questions' ? 'active' : ''; ?>" href="questions.php">
+                                    <i class="fas fa-question-circle"></i> <?php echo __('admin_questions'); ?>
+                                </a>
+                            </li>
 
                         <?php else: ?>
-                        <!-- School Admin Navigation -->
-                        <li class="nav-item">
-                            <a class="nav-link <?php echo $currentAdminPage === 'reports' ? 'active' : ''; ?>" href="reports.php">
-                                <i class="fas fa-chart-bar"></i> <?php echo __('admin_reports'); ?>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link <?php echo $currentAdminPage === 'users' ? 'active' : ''; ?>" href="users.php">
-                                <i class="fas fa-users"></i> <?php echo __('admin_students'); ?>
-                            </a>
-                        </li>
+                            <!-- School Admin Navigation -->
+                            <li class="nav-item">
+                                <a class="nav-link <?php echo $currentAdminPage === 'reports' ? 'active' : ''; ?>" href="reports.php">
+                                    <i class="fas fa-chart-bar"></i> <?php echo __('admin_reports'); ?>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link <?php echo $currentAdminPage === 'users' ? 'active' : ''; ?>" href="users.php">
+                                    <i class="fas fa-users"></i> <?php echo __('admin_students'); ?>
+                                </a>
+                            </li>
                         <?php endif; ?>
                     </ul>
                 </div>

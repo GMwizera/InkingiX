@@ -1,6 +1,7 @@
 <?php
+
 /**
- * EduBridge Rwanda - Registration Page
+ * InkingiX Rwanda - Registration Page
  */
 
 $pageTitle = 'Register';
@@ -103,14 +104,14 @@ require_once 'includes/header.php';
                 </div>
 
                 <?php if (!empty($errors)): ?>
-                <div class="alert alert-danger">
-                    <i class="fas fa-exclamation-circle me-2"></i>
-                    <ul class="mb-0 ps-3">
-                        <?php foreach ($errors as $error): ?>
-                        <li><?php echo $error; ?></li>
-                        <?php endforeach; ?>
-                    </ul>
-                </div>
+                    <div class="alert alert-danger">
+                        <i class="fas fa-exclamation-circle me-2"></i>
+                        <ul class="mb-0 ps-3">
+                            <?php foreach ($errors as $error): ?>
+                                <li><?php echo $error; ?></li>
+                            <?php endforeach; ?>
+                        </ul>
+                    </div>
                 <?php endif; ?>
 
                 <form method="POST" class="needs-validation" novalidate>
@@ -120,14 +121,14 @@ require_once 'includes/header.php';
                         <div class="col-md-6 mb-3">
                             <label for="first_name" class="form-label"><?php echo __('register_first_name'); ?> <span class="text-danger">*</span></label>
                             <input type="text" class="form-control" id="first_name" name="first_name"
-                                   value="<?php echo htmlspecialchars($_POST['first_name'] ?? ''); ?>"
-                                   required autofocus>
+                                value="<?php echo htmlspecialchars($_POST['first_name'] ?? ''); ?>"
+                                required autofocus>
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="last_name" class="form-label"><?php echo __('register_last_name'); ?> <span class="text-danger">*</span></label>
                             <input type="text" class="form-control" id="last_name" name="last_name"
-                                   value="<?php echo htmlspecialchars($_POST['last_name'] ?? ''); ?>"
-                                   required>
+                                value="<?php echo htmlspecialchars($_POST['last_name'] ?? ''); ?>"
+                                required>
                         </div>
                     </div>
 
@@ -136,8 +137,8 @@ require_once 'includes/header.php';
                         <div class="input-group">
                             <span class="input-group-text"><i class="fas fa-envelope"></i></span>
                             <input type="email" class="form-control" id="email" name="email"
-                                   value="<?php echo htmlspecialchars($_POST['email'] ?? ''); ?>"
-                                   required>
+                                value="<?php echo htmlspecialchars($_POST['email'] ?? ''); ?>"
+                                required>
                         </div>
                     </div>
 
@@ -147,7 +148,7 @@ require_once 'includes/header.php';
                             <div class="input-group">
                                 <span class="input-group-text"><i class="fas fa-lock"></i></span>
                                 <input type="password" class="form-control" id="password" name="password"
-                                       minlength="6" required>
+                                    minlength="6" required>
                             </div>
                             <small class="text-muted">Minimum 6 characters</small>
                         </div>
@@ -165,10 +166,10 @@ require_once 'includes/header.php';
                         <select class="form-select" id="school_name" name="school_name" required>
                             <option value="">Select your school...</option>
                             <?php foreach ($schools as $school): ?>
-                            <option value="<?php echo htmlspecialchars($school['name']); ?>"
+                                <option value="<?php echo htmlspecialchars($school['name']); ?>"
                                     <?php echo (($_POST['school_name'] ?? '') === $school['name']) ? 'selected' : ''; ?>>
-                                <?php echo htmlspecialchars($school['name']); ?>
-                            </option>
+                                    <?php echo htmlspecialchars($school['name']); ?>
+                                </option>
                             <?php endforeach; ?>
                             <option value="other">Other (specify below)</option>
                         </select>
@@ -207,18 +208,18 @@ require_once 'includes/header.php';
 </div>
 
 <script>
-document.getElementById('school_name').addEventListener('change', function() {
-    const otherDiv = document.getElementById('otherSchoolDiv');
-    const otherInput = document.getElementById('other_school');
+    document.getElementById('school_name').addEventListener('change', function() {
+        const otherDiv = document.getElementById('otherSchoolDiv');
+        const otherInput = document.getElementById('other_school');
 
-    if (this.value === 'other') {
-        otherDiv.style.display = 'block';
-        otherInput.required = true;
-    } else {
-        otherDiv.style.display = 'none';
-        otherInput.required = false;
-    }
-});
+        if (this.value === 'other') {
+            otherDiv.style.display = 'block';
+            otherInput.required = true;
+        } else {
+            otherDiv.style.display = 'none';
+            otherInput.required = false;
+        }
+    });
 </script>
 
 <?php require_once 'includes/footer.php'; ?>

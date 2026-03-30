@@ -1,6 +1,7 @@
 <?php
+
 /**
- * EduBridge Rwanda - Database Configuration
+ * InkingiX Rwanda - Database Configuration
  * Reads configuration from .env file with fallback values
  */
 
@@ -36,7 +37,8 @@ define('DB_PASS', getenv('DB_PASS') ?: '');
 define('DB_CHARSET', 'utf8mb4');
 
 // Create database connection
-function getDBConnection() {
+function getDBConnection()
+{
     static $pdo = null;
 
     if ($pdo === null) {
@@ -62,8 +64,8 @@ function getDBConnection() {
 }
 
 // Site configuration with fallbacks
-define('SITE_NAME', getenv('SITE_NAME') ?: 'EduBridge Rwanda');
-define('SITE_URL', getenv('APP_URL') ?: 'http://localhost/InkingiX_Edubridge');
+define('SITE_NAME', getenv('SITE_NAME') ?: 'InkingiX Rwanda');
+define('SITE_URL', getenv('APP_URL') ?: 'http://localhost/InkingiX_InkingiX');
 define('DEFAULT_LANGUAGE', getenv('DEFAULT_LANGUAGE') ?: 'en');
 define('APP_ENV', getenv('APP_ENV') ?: 'development');
 define('APP_DEBUG', getenv('APP_DEBUG') === 'true');

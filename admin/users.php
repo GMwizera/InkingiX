@@ -1,13 +1,13 @@
 <?php
+
 /**
- * EduBridge Rwanda - Admin Users Management
+ * InkingiX Rwanda - Admin Users Management
  */
 
-$pageTitle = __('admin_users', 'Manage Users');
-
-// Include functions first for POST handling
 require_once '../includes/functions.php';
 requireRole(['system_admin', 'school_admin']);
+
+$pageTitle = __('admin_users', 'Manage Users');
 
 $currentUser = getCurrentUser();
 $db = getDBConnection();
@@ -90,18 +90,18 @@ require_once 'includes/header-admin.php';
         <form method="GET" class="row g-3">
             <div class="col-md-<?php echo $currentUser['role'] === 'system_admin' ? '5' : '9'; ?>">
                 <input type="text" class="form-control" name="search"
-                       placeholder="<?php echo __('search', 'Search'); ?>..."
-                       value="<?php echo htmlspecialchars($searchTerm); ?>">
+                    placeholder="<?php echo __('search', 'Search'); ?>..."
+                    value="<?php echo htmlspecialchars($searchTerm); ?>">
             </div>
             <?php if ($currentUser['role'] === 'system_admin'): ?>
-            <div class="col-md-4">
-                <select class="form-select" name="role">
-                    <option value=""><?php echo __('admin_all_schools', 'All Roles'); ?></option>
-                    <option value="student" <?php echo $roleFilter === 'student' ? 'selected' : ''; ?>><?php echo __('admin_students'); ?></option>
-                    <option value="school_admin" <?php echo $roleFilter === 'school_admin' ? 'selected' : ''; ?>><?php echo __('admin_school_admin'); ?></option>
-                    <option value="system_admin" <?php echo $roleFilter === 'system_admin' ? 'selected' : ''; ?>><?php echo __('admin_system_admin'); ?></option>
-                </select>
-            </div>
+                <div class="col-md-4">
+                    <select class="form-select" name="role">
+                        <option value=""><?php echo __('admin_all_schools', 'All Roles'); ?></option>
+                        <option value="student" <?php echo $roleFilter === 'student' ? 'selected' : ''; ?>><?php echo __('admin_students'); ?></option>
+                        <option value="school_admin" <?php echo $roleFilter === 'school_admin' ? 'selected' : ''; ?>><?php echo __('admin_school_admin'); ?></option>
+                        <option value="system_admin" <?php echo $roleFilter === 'system_admin' ? 'selected' : ''; ?>><?php echo __('admin_system_admin'); ?></option>
+                    </select>
+                </div>
             <?php endif; ?>
             <div class="col-md-3">
                 <button type="submit" class="btn btn-primary w-100">
@@ -121,11 +121,11 @@ require_once 'includes/header-admin.php';
                     <th><?php echo __('admin_name'); ?></th>
                     <th>Email</th>
                     <?php if ($currentUser['role'] === 'system_admin'): ?>
-                    <th><?php echo __('profile_school'); ?></th>
+                        <th><?php echo __('profile_school'); ?></th>
                     <?php endif; ?>
                     <th><?php echo __('profile_grade', 'Grade'); ?></th>
                     <?php if ($currentUser['role'] === 'system_admin'): ?>
-                    <th>Role</th>
+                        <th>Role</th>
                     <?php endif; ?>
                     <th>Status</th>
                     <th><?php echo __('admin_date'); ?></th>
@@ -134,49 +134,49 @@ require_once 'includes/header-admin.php';
             </thead>
             <tbody>
                 <?php if (empty($users)): ?>
-                <tr>
-                    <td colspan="<?php echo $currentUser['role'] === 'system_admin' ? '8' : '5'; ?>" class="text-center text-muted py-4">
-                        <?php echo __('admin_no_data_yet'); ?>
-                    </td>
-                </tr>
+                    <tr>
+                        <td colspan="<?php echo $currentUser['role'] === 'system_admin' ? '8' : '5'; ?>" class="text-center text-muted py-4">
+                            <?php echo __('admin_no_data_yet'); ?>
+                        </td>
+                    </tr>
                 <?php else: ?>
-                <?php foreach ($users as $user): ?>
-                <tr>
-                    <td>
-                        <strong><?php echo htmlspecialchars($user['first_name'] . ' ' . $user['last_name']); ?></strong>
-                    </td>
-                    <td><?php echo htmlspecialchars($user['email']); ?></td>
-                    <?php if ($currentUser['role'] === 'system_admin'): ?>
-                    <td><small><?php echo htmlspecialchars($user['school_name'] ?: '-'); ?></small></td>
-                    <?php endif; ?>
-                    <td><?php echo $user['grade_level'] ?: '-'; ?></td>
-                    <?php if ($currentUser['role'] === 'system_admin'): ?>
-                    <td>
-                        <span class="badge bg-<?php echo $user['role'] === 'system_admin' ? 'danger' : ($user['role'] === 'school_admin' ? 'warning' : 'secondary'); ?>">
-                            <?php echo ucfirst(str_replace('_', ' ', $user['role'])); ?>
-                        </span>
-                    </td>
-                    <?php endif; ?>
-                    <td>
-                        <span class="badge bg-<?php echo $user['is_active'] ? 'success' : 'secondary'; ?>">
-                            <?php echo $user['is_active'] ? 'Active' : 'Inactive'; ?>
-                        </span>
-                    </td>
-                    <td><small><?php echo date('M j, Y', strtotime($user['created_at'])); ?></small></td>
-                    <td>
-                        <?php if ($user['id'] !== $currentUser['id']): ?>
-                        <form method="POST" class="d-inline">
-                            <input type="hidden" name="user_id" value="<?php echo $user['id']; ?>">
-                            <input type="hidden" name="action" value="toggle_status">
-                            <button type="submit" class="btn btn-sm btn-outline-<?php echo $user['is_active'] ? 'warning' : 'success'; ?>"
-                                    title="<?php echo $user['is_active'] ? 'Deactivate' : 'Activate'; ?>">
-                                <i class="fas fa-<?php echo $user['is_active'] ? 'ban' : 'check'; ?>"></i>
-                            </button>
-                        </form>
-                        <?php endif; ?>
-                    </td>
-                </tr>
-                <?php endforeach; ?>
+                    <?php foreach ($users as $user): ?>
+                        <tr>
+                            <td>
+                                <strong><?php echo htmlspecialchars($user['first_name'] . ' ' . $user['last_name']); ?></strong>
+                            </td>
+                            <td><?php echo htmlspecialchars($user['email']); ?></td>
+                            <?php if ($currentUser['role'] === 'system_admin'): ?>
+                                <td><small><?php echo htmlspecialchars($user['school_name'] ?: '-'); ?></small></td>
+                            <?php endif; ?>
+                            <td><?php echo $user['grade_level'] ?: '-'; ?></td>
+                            <?php if ($currentUser['role'] === 'system_admin'): ?>
+                                <td>
+                                    <span class="badge bg-<?php echo $user['role'] === 'system_admin' ? 'danger' : ($user['role'] === 'school_admin' ? 'warning' : 'secondary'); ?>">
+                                        <?php echo ucfirst(str_replace('_', ' ', $user['role'])); ?>
+                                    </span>
+                                </td>
+                            <?php endif; ?>
+                            <td>
+                                <span class="badge bg-<?php echo $user['is_active'] ? 'success' : 'secondary'; ?>">
+                                    <?php echo $user['is_active'] ? 'Active' : 'Inactive'; ?>
+                                </span>
+                            </td>
+                            <td><small><?php echo date('M j, Y', strtotime($user['created_at'])); ?></small></td>
+                            <td>
+                                <?php if ($user['id'] !== $currentUser['id']): ?>
+                                    <form method="POST" class="d-inline">
+                                        <input type="hidden" name="user_id" value="<?php echo $user['id']; ?>">
+                                        <input type="hidden" name="action" value="toggle_status">
+                                        <button type="submit" class="btn btn-sm btn-outline-<?php echo $user['is_active'] ? 'warning' : 'success'; ?>"
+                                            title="<?php echo $user['is_active'] ? 'Deactivate' : 'Activate'; ?>">
+                                            <i class="fas fa-<?php echo $user['is_active'] ? 'ban' : 'check'; ?>"></i>
+                                        </button>
+                                    </form>
+                                <?php endif; ?>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
                 <?php endif; ?>
             </tbody>
         </table>

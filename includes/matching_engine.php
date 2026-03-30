@@ -1,6 +1,7 @@
 <?php
+
 /**
- * EduBridge Rwanda - Matching Engine
+ * InkingiX Rwanda - Matching Engine
  * Adaptive question selection and career matching logic
  *
  * Based on RIASEC/Holland Codes model:
@@ -16,7 +17,8 @@
  * @param int $assessmentId Assessment ID
  * @return array Array of top 2 category IDs
  */
-function getTopCategoriesSoFar(PDO $pdo, int $assessmentId): array {
+function getTopCategoriesSoFar(PDO $pdo, int $assessmentId): array
+{
     $stmt = $pdo->prepare("
         SELECT q.category_id, SUM(r.response_value * q.weight) AS score
         FROM assessment_responses r
@@ -40,7 +42,8 @@ function getTopCategoriesSoFar(PDO $pdo, int $assessmentId): array {
  * @param int $limit Number of questions to return
  * @return array Array of next question(s)
  */
-function getNextQuestionsAdaptive(PDO $pdo, int $assessmentId, array $answeredQuestionIds, int $limit = 1): array {
+function getNextQuestionsAdaptive(PDO $pdo, int $assessmentId, array $answeredQuestionIds, int $limit = 1): array
+{
     $answeredCount = count($answeredQuestionIds);
 
     // Get all unanswered questions
@@ -111,7 +114,7 @@ function getNextQuestionsAdaptive(PDO $pdo, int $assessmentId, array $answeredQu
     );
 
     // Sort by order_number to maintain some question flow
-    usort($selectedQuestions, function($a, $b) {
+    usort($selectedQuestions, function ($a, $b) {
         return $a['order_number'] - $b['order_number'];
     });
 
@@ -126,7 +129,8 @@ function getNextQuestionsAdaptive(PDO $pdo, int $assessmentId, array $answeredQu
  * @param int $assessmentId Assessment ID
  * @return array Array with 'categories' and 'careers' keys
  */
-function calculateFinalMatches(PDO $pdo, int $assessmentId): array {
+function calculateFinalMatches(PDO $pdo, int $assessmentId): array
+{
     // Calculate raw scores per category
     $stmt = $pdo->prepare("
         SELECT q.category_id,
@@ -157,7 +161,7 @@ function calculateFinalMatches(PDO $pdo, int $assessmentId): array {
     }
 
     // Sort categories by percentage descending
-    uasort($categoryScores, function($a, $b) {
+    uasort($categoryScores, function ($a, $b) {
         return $b['percentage'] <=> $a['percentage'];
     });
 
@@ -209,7 +213,7 @@ function calculateFinalMatches(PDO $pdo, int $assessmentId): array {
     }
 
     // Sort by match percentage descending
-    usort($careerMatches, function($a, $b) {
+    usort($careerMatches, function ($a, $b) {
         return $b['match_percentage'] <=> $a['match_percentage'];
     });
 
@@ -234,7 +238,8 @@ function calculateFinalMatches(PDO $pdo, int $assessmentId): array {
  * @param array $results Results from calculateFinalMatches()
  * @return bool Success status
  */
-function saveAssessmentResults(PDO $pdo, int $assessmentId, array $results): bool {
+function saveAssessmentResults(PDO $pdo, int $assessmentId, array $results): bool
+{
     try {
         $pdo->beginTransaction();
 
@@ -285,7 +290,6 @@ function saveAssessmentResults(PDO $pdo, int $assessmentId, array $results): boo
 
         $pdo->commit();
         return true;
-
     } catch (PDOException $e) {
         $pdo->rollBack();
         error_log("Error saving assessment results: " . $e->getMessage());
@@ -300,7 +304,8 @@ function saveAssessmentResults(PDO $pdo, int $assessmentId, array $results): boo
  * @param int $assessmentId Assessment ID
  * @return array Progress information
  */
-function getAssessmentProgress(PDO $pdo, int $assessmentId): array {
+function getAssessmentProgress(PDO $pdo, int $assessmentId): array
+{
     // Get total questions
     $stmt = $pdo->query("SELECT COUNT(*) FROM assessment_questions WHERE is_active = 1");
     $totalQuestions = (int) $stmt->fetchColumn();
@@ -350,7 +355,8 @@ function getAssessmentProgress(PDO $pdo, int $assessmentId): array {
  * @param int $assessmentId Assessment ID
  * @return array|false Results array or false on failure
  */
-function completeAssessment(PDO $pdo, int $assessmentId) {
+function completeAssessment(PDO $pdo, int $assessmentId)
+{
     // Calculate final matches
     $results = calculateFinalMatches($pdo, $assessmentId);
 

@@ -1,13 +1,14 @@
 <?php
+
 /**
- * EduBridge Rwanda - Admin Institutions Management
+ * InkingiX Rwanda - Admin Institutions Management
  * System admin only
  */
 
-$pageTitle = __('nav_institutions', 'Manage Institutions');
-
 require_once '../includes/functions.php';
 requireRole(['system_admin']);
+
+$pageTitle = __('nav_institutions', 'Manage Institutions');
 
 $currentUser = getCurrentUser();
 $db = getDBConnection();
@@ -76,45 +77,45 @@ require_once 'includes/header-admin.php';
             </thead>
             <tbody>
                 <?php if (empty($institutions)): ?>
-                <tr>
-                    <td colspan="6" class="text-center text-muted py-4">
-                        <?php echo __('admin_no_data_yet'); ?>
-                    </td>
-                </tr>
+                    <tr>
+                        <td colspan="6" class="text-center text-muted py-4">
+                            <?php echo __('admin_no_data_yet'); ?>
+                        </td>
+                    </tr>
                 <?php else: ?>
-                <?php foreach ($institutions as $inst): ?>
-                <tr>
-                    <td>
-                        <strong><?php echo htmlspecialchars($inst['name_en']); ?></strong>
-                        <?php if ($inst['website']): ?>
-                        <br><small><a href="<?php echo $inst['website']; ?>" target="_blank" class="text-muted">
-                            <i class="fas fa-external-link-alt me-1"></i><?php echo __('institution_website'); ?>
-                        </a></small>
-                        <?php endif; ?>
-                    </td>
-                    <td>
-                        <span class="badge bg-<?php echo $inst['type'] === 'university' ? 'primary' : ($inst['type'] === 'tvet' ? 'success' : 'info'); ?>">
-                            <?php echo ucfirst($inst['type']); ?>
-                        </span>
-                    </td>
-                    <td><?php echo htmlspecialchars($inst['location']); ?></td>
-                    <td><?php echo $inst['is_public'] ? 'Public' : 'Private'; ?></td>
-                    <td>
-                        <span class="badge bg-<?php echo $inst['is_active'] ? 'success' : 'secondary'; ?>">
-                            <?php echo $inst['is_active'] ? 'Active' : 'Inactive'; ?>
-                        </span>
-                    </td>
-                    <td>
-                        <form method="POST" class="d-inline">
-                            <input type="hidden" name="institution_id" value="<?php echo $inst['id']; ?>">
-                            <input type="hidden" name="action" value="toggle_status">
-                            <button type="submit" class="btn btn-sm btn-outline-<?php echo $inst['is_active'] ? 'warning' : 'success'; ?>">
-                                <i class="fas fa-<?php echo $inst['is_active'] ? 'eye-slash' : 'eye'; ?>"></i>
-                            </button>
-                        </form>
-                    </td>
-                </tr>
-                <?php endforeach; ?>
+                    <?php foreach ($institutions as $inst): ?>
+                        <tr>
+                            <td>
+                                <strong><?php echo htmlspecialchars($inst['name_en']); ?></strong>
+                                <?php if ($inst['website']): ?>
+                                    <br><small><a href="<?php echo $inst['website']; ?>" target="_blank" class="text-muted">
+                                            <i class="fas fa-external-link-alt me-1"></i><?php echo __('institution_website'); ?>
+                                        </a></small>
+                                <?php endif; ?>
+                            </td>
+                            <td>
+                                <span class="badge bg-<?php echo $inst['type'] === 'university' ? 'primary' : ($inst['type'] === 'tvet' ? 'success' : 'info'); ?>">
+                                    <?php echo ucfirst($inst['type']); ?>
+                                </span>
+                            </td>
+                            <td><?php echo htmlspecialchars($inst['location']); ?></td>
+                            <td><?php echo $inst['is_public'] ? 'Public' : 'Private'; ?></td>
+                            <td>
+                                <span class="badge bg-<?php echo $inst['is_active'] ? 'success' : 'secondary'; ?>">
+                                    <?php echo $inst['is_active'] ? 'Active' : 'Inactive'; ?>
+                                </span>
+                            </td>
+                            <td>
+                                <form method="POST" class="d-inline">
+                                    <input type="hidden" name="institution_id" value="<?php echo $inst['id']; ?>">
+                                    <input type="hidden" name="action" value="toggle_status">
+                                    <button type="submit" class="btn btn-sm btn-outline-<?php echo $inst['is_active'] ? 'warning' : 'success'; ?>">
+                                        <i class="fas fa-<?php echo $inst['is_active'] ? 'eye-slash' : 'eye'; ?>"></i>
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
                 <?php endif; ?>
             </tbody>
         </table>

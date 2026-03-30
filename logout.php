@@ -1,6 +1,7 @@
 <?php
+
 /**
- * EduBridge Rwanda - Logout
+ * InkingiX Rwanda - Logout
  */
 
 require_once 'includes/functions.php';
@@ -12,4 +13,3 @@ session_destroy();
 // Redirect to home
 header('Location: index.php');
 exit;
-?>

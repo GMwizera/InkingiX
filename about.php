@@ -1,9 +1,11 @@
 <?php
+
 /**
- * EduBridge Rwanda - About Page
+ * InkingiX Rwanda - About Page
  */
 
 $pageTitle = 'About Us';
+$pageSubtitle = 'Learn about our mission to empower Rwandan students';
 require_once 'includes/functions.php';
 
 if (isset($_GET['lang'])) {
@@ -19,12 +21,6 @@ if (isLoggedIn()) {
     require_once 'includes/header.php';
 }
 ?>
-
-<!-- Hero -->
-<div class="text-center mb-5">
-    <h1 class="display-5 fw-bold"><i class="fas fa-graduation-cap me-3 text-primary"></i>About EduBridge Rwanda</h1>
-    <p class="lead text-muted">Empowering Rwandan students to discover their career paths through technology</p>
-</div>
 
 <div class="row">
     <div class="col-lg-8">
@@ -54,7 +50,7 @@ if (isLoggedIn()) {
         <div class="card mb-4">
             <div class="card-body">
                 <h4><i class="fas fa-check-circle me-2 text-success"></i>Our Solution</h4>
-                <p>EduBridge Rwanda provides a simple, accessible digital tool for career exploration targeted at Senior 1-6 students in Rwandan schools:</p>
+                <p>InkingiX Rwanda provides a simple, accessible digital tool for career exploration targeted at Senior 1-6 students in Rwandan schools:</p>
                 <div class="row g-3">
                     <div class="col-md-6">
                         <div class="d-flex align-items-start">
@@ -118,7 +114,7 @@ if (isLoggedIn()) {
                 <h5>Contact Us</h5>
                 <p class="text-muted">Have questions or feedback?</p>
                 <ul class="list-unstyled">
-                    <li class="mb-2"><i class="fas fa-envelope me-2"></i>info@edubridge.rw</li>
+                    <li class="mb-2"><i class="fas fa-envelope me-2"></i>info@InkingiX.rw</li>
                     <li class="mb-2"><i class="fas fa-phone me-2"></i>+250 788 000 000</li>
                     <li><i class="fas fa-map-marker-alt me-2"></i>Kigali, Rwanda</li>
                 </ul>
@@ -157,13 +153,13 @@ if (isLoggedIn()) {
     <h3>Ready to Discover Your Career Path?</h3>
     <p class="text-muted mb-4">Join thousands of Rwandan students finding their future.</p>
     <?php if (!isLoggedIn()): ?>
-    <a href="register.php" class="btn btn-primary btn-lg">
-        <i class="fas fa-user-plus me-2"></i>Get Started Free
-    </a>
+        <a href="register.php" class="btn btn-primary btn-lg">
+            <i class="fas fa-user-plus me-2"></i>Get Started Free
+        </a>
     <?php else: ?>
-    <a href="assessment.php" class="btn btn-primary btn-lg">
-        <i class="fas fa-clipboard-list me-2"></i>Take Assessment
-    </a>
+        <a href="assessment.php" class="btn btn-primary btn-lg">
+            <i class="fas fa-clipboard-list me-2"></i>Take Assessment
+        </a>
     <?php endif; ?>
 </div>
 

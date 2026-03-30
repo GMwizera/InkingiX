@@ -1,8 +1,8 @@
--- EduBridge Rwanda Database Schema
+-- InkingiX Rwanda Database Schema
 -- Version 1.0 - MVP
 -- UTF-8 encoding for Kinyarwanda support
-                                                                  
-              
+
+
 SET NAMES utf8mb4;
 SET CHARACTER SET utf8mb4;
 
@@ -358,7 +358,7 @@ INSERT INTO assessment_questions (question_en, question_rw, category_id, weight,
 
 -- Create default admin user (password: admin123 - should be changed immediately)
 INSERT INTO users (email, password, first_name, last_name, role, is_active) VALUES
-('admin@edubridge.rw', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'System', 'Administrator', 'system_admin', 1);
+('admin@inkingiX.rw', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'System', 'Administrator', 'system_admin', 1);
 
 -- Create indexes for better performance
 CREATE INDEX idx_careers_primary_cat ON careers(primary_category_id);

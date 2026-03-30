@@ -1,10 +1,12 @@
 <?php
+
 /**
- * EduBridge Rwanda - Career Comparison Page
+ * InkingiX Rwanda - Career Comparison Page
  * Side-by-side comparison of two careers
  */
 
 $pageTitle = 'Compare Careers';
+$pageSubtitle = 'Side-by-side comparison to help you decide';
 require_once 'includes/functions.php';
 
 // Handle language switch
@@ -35,7 +37,8 @@ if ($careerIdA <= 0 || $careerIdB <= 0) {
 }
 
 // Function to get career details with category
-function getCareerDetails($db, $careerId) {
+function getCareerDetails($db, $careerId)
+{
     $stmt = $db->prepare("
         SELECT c.*, cc.name_en AS category_name_en, cc.name_rw AS category_name_rw, cc.code AS category_code
         FROM careers c
@@ -47,7 +50,8 @@ function getCareerDetails($db, $careerId) {
 }
 
 // Function to get institutions for a career
-function getCareerInstitutions($db, $careerId) {
+function getCareerInstitutions($db, $careerId)
+{
     $stmt = $db->prepare("
         SELECT i.*, ci.program_name_en, ci.program_name_rw, ci.duration
         FROM institutions i
@@ -86,165 +90,165 @@ if (isLoggedIn()) {
 ?>
 
 <style>
-/* Compare page specific styles */
-.compare-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1.5rem;
-}
-
-.compare-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1.5rem;
-}
-
-@media (max-width: 768px) {
-    .compare-grid {
-        grid-template-columns: 1fr;
+    /* Compare page specific styles */
+    .compare-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.5rem;
     }
-}
 
-.compare-card {
-    border: 2px solid var(--border-light, #e5e7eb);
-    border-radius: 12px;
-    overflow: hidden;
-    background: white;
-}
+    .compare-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1.5rem;
+    }
 
-.compare-card.career-a {
-    border-color: var(--primary, #2E7D5A);
-}
+    @media (max-width: 768px) {
+        .compare-grid {
+            grid-template-columns: 1fr;
+        }
+    }
 
-.compare-card.career-b {
-    border-color: var(--blue-300, #1E5F8C);
-}
+    .compare-card {
+        border: 2px solid var(--border-light, #e5e7eb);
+        border-radius: 12px;
+        overflow: hidden;
+        background: white;
+    }
 
-.compare-card-header {
-    padding: 1.25rem;
-    background: #f8fafc;
-    border-bottom: 1px solid var(--border-light, #e5e7eb);
-}
+    .compare-card.career-a {
+        border-color: var(--primary, #2E7D5A);
+    }
 
-.compare-card.career-a .compare-card-header {
-    background: rgba(46, 125, 90, 0.05);
-}
+    .compare-card.career-b {
+        border-color: var(--blue-300, #1E5F8C);
+    }
 
-.compare-card.career-b .compare-card-header {
-    background: rgba(30, 95, 140, 0.05);
-}
+    .compare-card-header {
+        padding: 1.25rem;
+        background: #f8fafc;
+        border-bottom: 1px solid var(--border-light, #e5e7eb);
+    }
 
-.compare-card-body {
-    padding: 1.25rem;
-}
+    .compare-card.career-a .compare-card-header {
+        background: rgba(46, 125, 90, 0.05);
+    }
 
-.compare-section {
-    margin-bottom: 1.5rem;
-}
+    .compare-card.career-b .compare-card-header {
+        background: rgba(30, 95, 140, 0.05);
+    }
 
-.compare-section:last-child {
-    margin-bottom: 0;
-}
+    .compare-card-body {
+        padding: 1.25rem;
+    }
 
-.compare-section-title {
-    font-size: 0.75rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    color: #6b7280;
-    margin-bottom: 0.75rem;
-}
+    .compare-section {
+        margin-bottom: 1.5rem;
+    }
 
-.compare-career-title {
-    font-size: 1.25rem;
-    font-weight: 700;
-    margin-bottom: 0.75rem;
-}
+    .compare-section:last-child {
+        margin-bottom: 0;
+    }
 
-.compare-match-score {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.5rem 1rem;
-    background: #dbeafe;
-    border-radius: 8px;
-    font-weight: 600;
-    color: #1e40af;
-    margin-bottom: 1rem;
-}
+    .compare-section-title {
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: #6b7280;
+        margin-bottom: 0.75rem;
+    }
 
-.compare-match-score i {
-    color: #3b82f6;
-}
+    .compare-career-title {
+        font-size: 1.25rem;
+        font-weight: 700;
+        margin-bottom: 0.75rem;
+    }
 
-.skill-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-}
+    .compare-match-score {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem 1rem;
+        background: #dbeafe;
+        border-radius: 8px;
+        font-weight: 600;
+        color: #1e40af;
+        margin-bottom: 1rem;
+    }
 
-.skill-tag {
-    padding: 0.375rem 0.75rem;
-    background: #f3f4f6;
-    border-radius: 20px;
-    font-size: 0.8rem;
-    color: #374151;
-}
+    .compare-match-score i {
+        color: #3b82f6;
+    }
 
-.salary-display {
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: var(--primary, #2E7D5A);
-}
+    .skill-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
 
-.institution-item {
-    padding: 0.75rem;
-    background: #f9fafb;
-    border-radius: 8px;
-    margin-bottom: 0.5rem;
-}
+    .skill-tag {
+        padding: 0.375rem 0.75rem;
+        background: #f3f4f6;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        color: #374151;
+    }
 
-.institution-item:last-child {
-    margin-bottom: 0;
-}
+    .salary-display {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: var(--primary, #2E7D5A);
+    }
 
-.institution-name {
-    font-weight: 600;
-    margin-bottom: 0.25rem;
-}
+    .institution-item {
+        padding: 0.75rem;
+        background: #f9fafb;
+        border-radius: 8px;
+        margin-bottom: 0.5rem;
+    }
 
-.institution-program {
-    font-size: 0.875rem;
-    color: #6b7280;
-}
+    .institution-item:last-child {
+        margin-bottom: 0;
+    }
 
-.institution-meta {
-    display: flex;
-    gap: 1rem;
-    margin-top: 0.5rem;
-    font-size: 0.75rem;
-}
+    .institution-name {
+        font-weight: 600;
+        margin-bottom: 0.25rem;
+    }
 
-.institution-meta span {
-    display: flex;
-    align-items: center;
-    gap: 0.25rem;
-}
+    .institution-program {
+        font-size: 0.875rem;
+        color: #6b7280;
+    }
 
-.compare-actions {
-    display: flex;
-    gap: 0.5rem;
-    margin-top: 1rem;
-    padding-top: 1rem;
-    border-top: 1px solid #e5e7eb;
-}
+    .institution-meta {
+        display: flex;
+        gap: 1rem;
+        margin-top: 0.5rem;
+        font-size: 0.75rem;
+    }
 
-.no-institutions {
-    color: #9ca3af;
-    font-style: italic;
-    font-size: 0.875rem;
-}
+    .institution-meta span {
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+    }
+
+    .compare-actions {
+        display: flex;
+        gap: 0.5rem;
+        margin-top: 1rem;
+        padding-top: 1rem;
+        border-top: 1px solid #e5e7eb;
+    }
+
+    .no-institutions {
+        color: #9ca3af;
+        font-style: italic;
+        font-size: 0.875rem;
+    }
 </style>
 
 <!-- Header with back button -->
@@ -271,10 +275,10 @@ if (isLoggedIn()) {
             </div>
 
             <?php if ($scoreA !== null): ?>
-            <div class="compare-match-score">
-                <i class="fas fa-chart-pie"></i>
-                <?php echo number_format($scoreA, 0); ?>% <?php echo __('match', 'Match'); ?>
-            </div>
+                <div class="compare-match-score">
+                    <i class="fas fa-chart-pie"></i>
+                    <?php echo number_format($scoreA, 0); ?>% <?php echo __('match', 'Match'); ?>
+                </div>
             <?php endif; ?>
         </div>
 
@@ -295,7 +299,7 @@ if (isLoggedIn()) {
                         $skill = trim($skill);
                         if (!empty($skill)):
                     ?>
-                    <span class="skill-tag"><?php echo htmlspecialchars($skill); ?></span>
+                            <span class="skill-tag"><?php echo htmlspecialchars($skill); ?></span>
                     <?php
                         endif;
                     endforeach;
@@ -318,22 +322,22 @@ if (isLoggedIn()) {
                 <div class="compare-section-title"><?php echo __('education_pathways', 'Education Pathways'); ?></div>
                 <?php if (!empty($institutionsA)): ?>
                     <?php foreach ($institutionsA as $inst): ?>
-                    <div class="institution-item">
-                        <div class="institution-name"><?php echo htmlspecialchars(getLocalizedField($inst, 'name')); ?></div>
-                        <div class="institution-program"><?php echo htmlspecialchars(getLocalizedField($inst, 'program_name')); ?></div>
-                        <div class="institution-meta">
-                            <span>
-                                <i class="fas fa-<?php echo $inst['type'] === 'university' ? 'graduation-cap' : 'tools'; ?>"></i>
-                                <?php echo ucfirst($inst['type']); ?>
-                            </span>
-                            <?php if (!empty($inst['location'])): ?>
-                            <span><i class="fas fa-map-marker-alt"></i> <?php echo htmlspecialchars($inst['location']); ?></span>
-                            <?php endif; ?>
-                            <?php if (!empty($inst['duration'])): ?>
-                            <span><i class="fas fa-clock"></i> <?php echo htmlspecialchars($inst['duration']); ?></span>
-                            <?php endif; ?>
+                        <div class="institution-item">
+                            <div class="institution-name"><?php echo htmlspecialchars(getLocalizedField($inst, 'name')); ?></div>
+                            <div class="institution-program"><?php echo htmlspecialchars(getLocalizedField($inst, 'program_name')); ?></div>
+                            <div class="institution-meta">
+                                <span>
+                                    <i class="fas fa-<?php echo $inst['type'] === 'university' ? 'graduation-cap' : 'tools'; ?>"></i>
+                                    <?php echo ucfirst($inst['type']); ?>
+                                </span>
+                                <?php if (!empty($inst['location'])): ?>
+                                    <span><i class="fas fa-map-marker-alt"></i> <?php echo htmlspecialchars($inst['location']); ?></span>
+                                <?php endif; ?>
+                                <?php if (!empty($inst['duration'])): ?>
+                                    <span><i class="fas fa-clock"></i> <?php echo htmlspecialchars($inst['duration']); ?></span>
+                                <?php endif; ?>
+                            </div>
                         </div>
-                    </div>
                     <?php endforeach; ?>
                 <?php else: ?>
                     <p class="no-institutions"><?php echo __('no_institutions', 'No institutions listed yet.'); ?></p>
@@ -342,17 +346,17 @@ if (isLoggedIn()) {
 
             <!-- Actions -->
             <?php if (isLoggedIn()): ?>
-            <div class="compare-actions">
-                <a href="career.php?id=<?php echo $careerIdA; ?>" class="btn btn-outline-primary btn-sm">
-                    <i class="fas fa-info-circle me-1"></i><?php echo __('view_details', 'View Details'); ?>
-                </a>
-                <button type="button"
+                <div class="compare-actions">
+                    <a href="career.php?id=<?php echo $careerIdA; ?>" class="btn btn-outline-primary btn-sm">
+                        <i class="fas fa-info-circle me-1"></i><?php echo __('view_details', 'View Details'); ?>
+                    </a>
+                    <button type="button"
                         class="btn btn-sm bookmark-btn <?php echo $isBookmarkedA ? 'btn-warning' : 'btn-outline-secondary'; ?>"
                         data-career-id="<?php echo $careerIdA; ?>">
-                    <i class="fas fa-bookmark me-1"></i>
-                    <span class="bookmark-text"><?php echo $isBookmarkedA ? __('saved', 'Saved') : __('save', 'Save'); ?></span>
-                </button>
-            </div>
+                        <i class="fas fa-bookmark me-1"></i>
+                        <span class="bookmark-text"><?php echo $isBookmarkedA ? __('saved', 'Saved') : __('save', 'Save'); ?></span>
+                    </button>
+                </div>
             <?php endif; ?>
         </div>
     </div>
@@ -371,10 +375,10 @@ if (isLoggedIn()) {
             </div>
 
             <?php if ($scoreB !== null): ?>
-            <div class="compare-match-score">
-                <i class="fas fa-chart-pie"></i>
-                <?php echo number_format($scoreB, 0); ?>% <?php echo __('match', 'Match'); ?>
-            </div>
+                <div class="compare-match-score">
+                    <i class="fas fa-chart-pie"></i>
+                    <?php echo number_format($scoreB, 0); ?>% <?php echo __('match', 'Match'); ?>
+                </div>
             <?php endif; ?>
         </div>
 
@@ -395,7 +399,7 @@ if (isLoggedIn()) {
                         $skill = trim($skill);
                         if (!empty($skill)):
                     ?>
-                    <span class="skill-tag"><?php echo htmlspecialchars($skill); ?></span>
+                            <span class="skill-tag"><?php echo htmlspecialchars($skill); ?></span>
                     <?php
                         endif;
                     endforeach;
@@ -418,22 +422,22 @@ if (isLoggedIn()) {
                 <div class="compare-section-title"><?php echo __('education_pathways', 'Education Pathways'); ?></div>
                 <?php if (!empty($institutionsB)): ?>
                     <?php foreach ($institutionsB as $inst): ?>
-                    <div class="institution-item">
-                        <div class="institution-name"><?php echo htmlspecialchars(getLocalizedField($inst, 'name')); ?></div>
-                        <div class="institution-program"><?php echo htmlspecialchars(getLocalizedField($inst, 'program_name')); ?></div>
-                        <div class="institution-meta">
-                            <span>
-                                <i class="fas fa-<?php echo $inst['type'] === 'university' ? 'graduation-cap' : 'tools'; ?>"></i>
-                                <?php echo ucfirst($inst['type']); ?>
-                            </span>
-                            <?php if (!empty($inst['location'])): ?>
-                            <span><i class="fas fa-map-marker-alt"></i> <?php echo htmlspecialchars($inst['location']); ?></span>
-                            <?php endif; ?>
-                            <?php if (!empty($inst['duration'])): ?>
-                            <span><i class="fas fa-clock"></i> <?php echo htmlspecialchars($inst['duration']); ?></span>
-                            <?php endif; ?>
+                        <div class="institution-item">
+                            <div class="institution-name"><?php echo htmlspecialchars(getLocalizedField($inst, 'name')); ?></div>
+                            <div class="institution-program"><?php echo htmlspecialchars(getLocalizedField($inst, 'program_name')); ?></div>
+                            <div class="institution-meta">
+                                <span>
+                                    <i class="fas fa-<?php echo $inst['type'] === 'university' ? 'graduation-cap' : 'tools'; ?>"></i>
+                                    <?php echo ucfirst($inst['type']); ?>
+                                </span>
+                                <?php if (!empty($inst['location'])): ?>
+                                    <span><i class="fas fa-map-marker-alt"></i> <?php echo htmlspecialchars($inst['location']); ?></span>
+                                <?php endif; ?>
+                                <?php if (!empty($inst['duration'])): ?>
+                                    <span><i class="fas fa-clock"></i> <?php echo htmlspecialchars($inst['duration']); ?></span>
+                                <?php endif; ?>
+                            </div>
                         </div>
-                    </div>
                     <?php endforeach; ?>
                 <?php else: ?>
                     <p class="no-institutions"><?php echo __('no_institutions', 'No institutions listed yet.'); ?></p>
@@ -442,17 +446,17 @@ if (isLoggedIn()) {
 
             <!-- Actions -->
             <?php if (isLoggedIn()): ?>
-            <div class="compare-actions">
-                <a href="career.php?id=<?php echo $careerIdB; ?>" class="btn btn-outline-primary btn-sm">
-                    <i class="fas fa-info-circle me-1"></i><?php echo __('view_details', 'View Details'); ?>
-                </a>
-                <button type="button"
+                <div class="compare-actions">
+                    <a href="career.php?id=<?php echo $careerIdB; ?>" class="btn btn-outline-primary btn-sm">
+                        <i class="fas fa-info-circle me-1"></i><?php echo __('view_details', 'View Details'); ?>
+                    </a>
+                    <button type="button"
                         class="btn btn-sm bookmark-btn <?php echo $isBookmarkedB ? 'btn-warning' : 'btn-outline-secondary'; ?>"
                         data-career-id="<?php echo $careerIdB; ?>">
-                    <i class="fas fa-bookmark me-1"></i>
-                    <span class="bookmark-text"><?php echo $isBookmarkedB ? __('saved', 'Saved') : __('save', 'Save'); ?></span>
-                </button>
-            </div>
+                        <i class="fas fa-bookmark me-1"></i>
+                        <span class="bookmark-text"><?php echo $isBookmarkedB ? __('saved', 'Saved') : __('save', 'Save'); ?></span>
+                    </button>
+                </div>
             <?php endif; ?>
         </div>
     </div>
@@ -466,40 +470,44 @@ if (isLoggedIn()) {
 </div>
 
 <?php if (isLoggedIn()): ?>
-<script>
-// Bookmark toggle functionality
-document.querySelectorAll('.bookmark-btn').forEach(btn => {
-    btn.addEventListener('click', async function() {
-        const careerId = this.dataset.careerId;
-        const btn = this;
-        const textSpan = btn.querySelector('.bookmark-text');
+    <script>
+        // Bookmark toggle functionality
+        document.querySelectorAll('.bookmark-btn').forEach(btn => {
+            btn.addEventListener('click', async function() {
+                const careerId = this.dataset.careerId;
+                const btn = this;
+                const textSpan = btn.querySelector('.bookmark-text');
 
-        try {
-            const response = await fetch('toggle_bookmark.php', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ career_id: parseInt(careerId) })
-            });
+                try {
+                    const response = await fetch('toggle_bookmark.php', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            career_id: parseInt(careerId)
+                        })
+                    });
 
-            const data = await response.json();
+                    const data = await response.json();
 
-            if (data.success) {
-                if (data.is_bookmarked) {
-                    btn.classList.remove('btn-outline-secondary');
-                    btn.classList.add('btn-warning');
-                    textSpan.textContent = '<?php echo __('saved', 'Saved'); ?>';
-                } else {
-                    btn.classList.remove('btn-warning');
-                    btn.classList.add('btn-outline-secondary');
-                    textSpan.textContent = '<?php echo __('save', 'Save'); ?>';
+                    if (data.success) {
+                        if (data.is_bookmarked) {
+                            btn.classList.remove('btn-outline-secondary');
+                            btn.classList.add('btn-warning');
+                            textSpan.textContent = '<?php echo __('saved', 'Saved'); ?>';
+                        } else {
+                            btn.classList.remove('btn-warning');
+                            btn.classList.add('btn-outline-secondary');
+                            textSpan.textContent = '<?php echo __('save', 'Save'); ?>';
+                        }
+                    }
+                } catch (error) {
+                    console.error('Bookmark error:', error);
                 }
-            }
-        } catch (error) {
-            console.error('Bookmark error:', error);
-        }
-    });
-});
-</script>
+            });
+        });
+    </script>
 <?php endif; ?>
 
 <?php
