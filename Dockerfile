@@ -9,5 +9,7 @@ WORKDIR /var/www/html
 # Copy all project files
 COPY . .
 
-# Use PHP built-in server (no Apache needed)
-CMD php -S 0.0.0.0:$PORT -t /var/www/html
+# Make startup script executable
+RUN chmod +x start.sh
+
+CMD ["bash", "start.sh"]
