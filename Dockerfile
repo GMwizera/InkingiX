@@ -1,8 +1,4 @@
-FROM php:8.2-apache
-
-# Fix Apache MPM conflict
-RUN a2dismod mpm_event mpm_worker 2>/dev/null || true && \
-    a2enmod mpm_prefork rewrite
+FROM php:8.2-cli
 
 # Install MySQL driver
 RUN docker-php-ext-install pdo pdo_mysql mysqli
@@ -13,7 +9,5 @@ WORKDIR /var/www/html
 # Copy all project files
 COPY . .
 
-# Fix permissions
-RUN chown -R www-data:www-data /var/www/html
-
-EXPOSE 80
+# Use PHP built-in server (no Apache needed)
+CMD php -S 0.0.0.0:$PORT -t /var/www/html
