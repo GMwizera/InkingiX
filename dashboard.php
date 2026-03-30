@@ -1,10 +1,12 @@
 <?php
 /**
- * EduBridge Rwanda - Student Dashboard
+ * EduBridge Rwanda - Student Dashboard (My Journey)
+ * Handles three states: no assessment, in-progress, completed
  */
 
 $pageTitle = 'Dashboard';
 require_once 'includes/functions.php';
+require_once 'includes/matching_engine.php';
 
 // Handle language switch
 if (isset($_GET['lang'])) {
@@ -16,16 +18,38 @@ if (isset($_GET['lang'])) {
 requireLogin();
 
 $currentUser = getCurrentUser();
+$db = getDBConnection();
 $latestAssessment = getLatestAssessment($currentUser['id']);
 $careerMatches = [];
+$assessmentProgress = null;
 
-if ($latestAssessment && $latestAssessment['is_completed']) {
-    $careerMatches = getCareerMatches($latestAssessment['id']);
+// Determine assessment state: none, in_progress, completed
+$assessmentState = 'none';
+if ($latestAssessment) {
+    if ($latestAssessment['is_completed']) {
+        $assessmentState = 'completed';
+        $careerMatches = getCareerMatches($latestAssessment['id']);
+    } else {
+        $assessmentState = 'in_progress';
+        $assessmentProgress = getAssessmentProgress($db, $latestAssessment['id']);
+    }
 }
 
 // Get user's bookmarked careers
 $bookmarks = getUserBookmarks($currentUser['id']);
 $bookmarkCount = count($bookmarks);
+
+// Calculate journey progress milestones
+$journeyMilestones = [
+    'profile_created' => true,
+    'assessment_started' => $latestAssessment !== null,
+    'assessment_completed' => $assessmentState === 'completed',
+    'careers_explored' => $bookmarkCount > 0 || count($careerMatches) > 0,
+    'career_saved' => $bookmarkCount > 0,
+];
+$completedMilestones = array_sum($journeyMilestones);
+$totalMilestones = count($journeyMilestones);
+$journeyPercentage = round(($completedMilestones / $totalMilestones) * 100);
 
 // Set page greeting
 $pageGreeting = __('dashboard_welcome', 'Hello') . ', ' . htmlspecialchars($currentUser['first_name']) . '!';
@@ -36,20 +60,30 @@ require_once 'includes/header-dashboard.php';
 
 <!-- Quick Actions -->
 <section class="quick-actions">
+    <?php if ($assessmentState === 'in_progress'): ?>
+    <a href="assessment.php" class="action-btn primary">
+        <i class="fas fa-play-circle"></i>
+        <?php echo __('dashboard_continue_assessment', 'Continue Assessment'); ?>
+    </a>
+    <?php elseif ($assessmentState === 'completed'): ?>
+    <a href="results.php" class="action-btn primary">
+        <i class="fas fa-chart-bar"></i>
+        <?php echo __('dashboard_view_results', 'View Results'); ?>
+    </a>
+    <a href="assessment.php" class="action-btn secondary">
+        <i class="fas fa-redo"></i>
+        <?php echo __('dashboard_retake', 'Retake Assessment'); ?>
+    </a>
+    <?php else: ?>
     <a href="assessment.php" class="action-btn primary">
         <i class="fas fa-clipboard-list"></i>
         <?php echo __('dashboard_take_assessment', 'Take Assessment'); ?>
     </a>
+    <?php endif; ?>
     <a href="careers.php" class="action-btn secondary">
         <i class="fas fa-compass"></i>
         <?php echo __('nav_careers', 'Explore Careers'); ?>
     </a>
-    <?php if ($latestAssessment && $latestAssessment['is_completed']): ?>
-    <a href="results.php" class="action-btn info">
-        <i class="fas fa-chart-bar"></i>
-        <?php echo __('dashboard_view_results', 'View Results'); ?>
-    </a>
-    <?php endif; ?>
     <?php if ($bookmarkCount > 0): ?>
     <a href="bookmarks.php" class="action-btn" style="background: #fef3c7; color: #d97706;">
         <i class="fas fa-bookmark"></i>
@@ -69,9 +103,12 @@ require_once 'includes/header-dashboard.php';
         <p class="stat-label"><?php echo __('dashboard_assessments', 'Assessments'); ?></p>
         <p class="stat-value"><?php echo $latestAssessment ? '1' : '0'; ?></p>
         <div class="stat-change">
-            <?php if ($latestAssessment && $latestAssessment['is_completed']): ?>
+            <?php if ($assessmentState === 'completed'): ?>
             <span class="stat-change-value positive"><i class="fas fa-check"></i></span>
             <span class="stat-change-text"><?php echo __('results_completed', 'Completed'); ?></span>
+            <?php elseif ($assessmentState === 'in_progress'): ?>
+            <span class="stat-change-value" style="color: #d97706;"><i class="fas fa-spinner"></i></span>
+            <span class="stat-change-text"><?php echo __('dashboard_in_progress', 'In Progress'); ?> (<?php echo $assessmentProgress['percentage'] ?? 0; ?>%)</span>
             <?php else: ?>
             <span class="stat-change-value"><i class="fas fa-clock"></i></span>
             <span class="stat-change-text"><?php echo __('dashboard_pending', 'Pending'); ?></span>
@@ -133,12 +170,42 @@ require_once 'includes/header-dashboard.php';
     <!-- Recent Activity / Main Content -->
     <section class="activity-section">
         <div class="section-header">
-            <h2 class="section-title"><i class="fas fa-history me-2"></i><?php echo __('dashboard_your_journey', 'Your Journey'); ?></h2>
+            <h2 class="section-title"><i class="fas fa-road me-2"></i><?php echo __('dashboard_your_journey', 'Your Journey'); ?></h2>
+            <span class="badge bg-primary"><?php echo $journeyPercentage; ?>% <?php echo __('dashboard_complete', 'complete'); ?></span>
         </div>
 
-        <?php if (!$latestAssessment || !$latestAssessment['is_completed']): ?>
+        <!-- Journey Progress Bar -->
+        <div class="journey-progress-container mb-4">
+            <div class="journey-progress-bar">
+                <div class="journey-progress-fill" style="width: <?php echo $journeyPercentage; ?>%"></div>
+            </div>
+            <div class="journey-milestones">
+                <div class="milestone <?php echo $journeyMilestones['profile_created'] ? 'completed' : ''; ?>">
+                    <div class="milestone-icon"><i class="fas fa-user"></i></div>
+                    <span class="milestone-label"><?php echo __('dashboard_milestone_profile', 'Profile'); ?></span>
+                </div>
+                <div class="milestone <?php echo $journeyMilestones['assessment_started'] ? 'completed' : ''; ?>">
+                    <div class="milestone-icon"><i class="fas fa-play"></i></div>
+                    <span class="milestone-label"><?php echo __('dashboard_milestone_started', 'Started'); ?></span>
+                </div>
+                <div class="milestone <?php echo $journeyMilestones['assessment_completed'] ? 'completed' : ''; ?>">
+                    <div class="milestone-icon"><i class="fas fa-check"></i></div>
+                    <span class="milestone-label"><?php echo __('dashboard_milestone_completed', 'Completed'); ?></span>
+                </div>
+                <div class="milestone <?php echo $journeyMilestones['careers_explored'] ? 'completed' : ''; ?>">
+                    <div class="milestone-icon"><i class="fas fa-search"></i></div>
+                    <span class="milestone-label"><?php echo __('dashboard_milestone_explored', 'Explored'); ?></span>
+                </div>
+                <div class="milestone <?php echo $journeyMilestones['career_saved'] ? 'completed' : ''; ?>">
+                    <div class="milestone-icon"><i class="fas fa-bookmark"></i></div>
+                    <span class="milestone-label"><?php echo __('dashboard_milestone_saved', 'Saved'); ?></span>
+                </div>
+            </div>
+        </div>
+
+        <?php if ($assessmentState === 'none'): ?>
         <!-- No Assessment Taken -->
-        <div class="text-center py-5">
+        <div class="journey-card text-center py-5">
             <div class="activity-icon assessment mx-auto mb-4" style="width: 80px; height: 80px;">
                 <i class="fas fa-clipboard-list" style="font-size: 2rem;"></i>
             </div>
@@ -148,8 +215,46 @@ require_once 'includes/header-dashboard.php';
                 <i class="fas fa-play me-2"></i><?php echo __('dashboard_take_assessment', 'Take Assessment'); ?>
             </a>
         </div>
+
+        <?php elseif ($assessmentState === 'in_progress'): ?>
+        <!-- Assessment In Progress -->
+        <div class="journey-card">
+            <div class="d-flex align-items-start gap-4">
+                <div class="activity-icon assessment" style="width: 60px; height: 60px; flex-shrink: 0;">
+                    <i class="fas fa-spinner fa-spin" style="font-size: 1.5rem;"></i>
+                </div>
+                <div class="flex-grow-1">
+                    <h4 class="mb-2"><?php echo __('dashboard_assessment_in_progress', 'Assessment In Progress'); ?></h4>
+                    <p class="text-muted mb-3"><?php echo __('dashboard_assessment_in_progress_desc', 'You have an unfinished assessment. Continue where you left off to see your career matches.'); ?></p>
+
+                    <!-- Progress Indicator -->
+                    <div class="assessment-progress-card mb-3">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="fw-semibold"><?php echo __('assessment_progress', 'Progress'); ?></span>
+                            <span class="badge bg-warning text-dark">
+                                <?php echo $assessmentProgress['answered_count'] ?? 0; ?> / <?php echo $assessmentProgress['total_questions'] ?? 30; ?> <?php echo __('dashboard_questions', 'questions'); ?>
+                            </span>
+                        </div>
+                        <div class="progress" style="height: 12px;">
+                            <div class="progress-bar bg-warning" role="progressbar" style="width: <?php echo $assessmentProgress['percentage'] ?? 0; ?>%"></div>
+                        </div>
+                        <?php if (isset($assessmentProgress['is_adaptive']) && $assessmentProgress['is_adaptive']): ?>
+                        <p class="text-muted small mt-2 mb-0">
+                            <i class="fas fa-magic me-1"></i>
+                            <?php echo __('dashboard_adaptive_mode', 'Adaptive mode active - questions personalized to your interests'); ?>
+                        </p>
+                        <?php endif; ?>
+                    </div>
+
+                    <a href="assessment.php" class="btn btn-warning btn-lg">
+                        <i class="fas fa-play-circle me-2"></i><?php echo __('dashboard_continue_assessment', 'Continue Assessment'); ?>
+                    </a>
+                </div>
+            </div>
+        </div>
+
         <?php else: ?>
-        <!-- Activity Feed -->
+        <!-- Assessment Completed - Activity Feed -->
         <div class="activity-feed">
             <div class="activity-item">
                 <div class="activity-icon success">
@@ -189,13 +294,18 @@ require_once 'includes/header-dashboard.php';
             </div>
         </div>
 
-        <div class="mt-4 d-flex gap-2">
+        <div class="mt-4 d-flex gap-2 flex-wrap">
             <a href="results.php" class="btn btn-primary">
                 <i class="fas fa-chart-bar me-2"></i><?php echo __('dashboard_view_results', 'View Full Results'); ?>
             </a>
             <a href="assessment.php" class="btn btn-outline">
                 <i class="fas fa-redo me-2"></i><?php echo __('dashboard_retake', 'Retake Assessment'); ?>
             </a>
+            <?php if (count($careerMatches) >= 2): ?>
+            <a href="compare.php?a=<?php echo $careerMatches[0]['career_id']; ?>&b=<?php echo $careerMatches[1]['career_id']; ?>" class="btn btn-outline-info">
+                <i class="fas fa-balance-scale me-2"></i><?php echo __('compare_careers', 'Compare Careers'); ?>
+            </a>
+            <?php endif; ?>
         </div>
         <?php endif; ?>
     </section>
@@ -284,6 +394,24 @@ require_once 'includes/header-dashboard.php';
             </div>
         </div>
 
+        <!-- Next Steps Card -->
+        <div class="sidebar-panel" style="background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);">
+            <h6 class="mb-3"><i class="fas fa-lightbulb me-2 text-warning"></i><?php echo __('dashboard_next_steps', 'Suggested Next Steps'); ?></h6>
+            <ul class="list-unstyled mb-0 small">
+                <?php if ($assessmentState === 'none'): ?>
+                <li class="mb-2"><i class="fas fa-arrow-right me-2 text-primary"></i><?php echo __('dashboard_step_take_assessment', 'Take the career interest assessment'); ?></li>
+                <li class="mb-2"><i class="fas fa-arrow-right me-2 text-muted"></i><?php echo __('dashboard_step_explore_careers', 'Explore career options'); ?></li>
+                <?php elseif ($assessmentState === 'in_progress'): ?>
+                <li class="mb-2"><i class="fas fa-arrow-right me-2 text-warning"></i><?php echo __('dashboard_step_complete_assessment', 'Complete your assessment'); ?></li>
+                <li class="mb-2"><i class="fas fa-arrow-right me-2 text-muted"></i><?php echo __('dashboard_step_view_results', 'View your results'); ?></li>
+                <?php else: ?>
+                <li class="mb-2"><i class="fas fa-check me-2 text-success"></i><?php echo __('dashboard_step_explore_matches', 'Explore your top career matches'); ?></li>
+                <li class="mb-2"><i class="fas fa-arrow-right me-2 text-primary"></i><?php echo __('dashboard_step_research_institutions', 'Research education pathways'); ?></li>
+                <li class="mb-2"><i class="fas fa-arrow-right me-2 text-muted"></i><?php echo __('dashboard_step_save_favorites', 'Save careers you like'); ?></li>
+                <?php endif; ?>
+            </ul>
+        </div>
+
         <!-- Help Card -->
         <div class="sidebar-panel" style="background: var(--soft-green-00);">
             <div class="d-flex align-items-start gap-3">
@@ -301,5 +429,116 @@ require_once 'includes/header-dashboard.php';
         </div>
     </aside>
 </div>
+
+<style>
+/* Journey Progress Styles */
+.journey-progress-container {
+    padding: 20px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.journey-progress-bar {
+    height: 8px;
+    background: #e9ecef;
+    border-radius: 4px;
+    margin-bottom: 20px;
+    overflow: hidden;
+}
+
+.journey-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #2E7D5A 0%, #4ade80 100%);
+    border-radius: 4px;
+    transition: width 0.5s ease-out;
+}
+
+.journey-milestones {
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+}
+
+.journey-milestones::before {
+    content: '';
+    position: absolute;
+    top: 15px;
+    left: 15%;
+    right: 15%;
+    height: 2px;
+    background: #e9ecef;
+    z-index: 0;
+}
+
+.milestone {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    position: relative;
+    z-index: 1;
+}
+
+.milestone-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: #e9ecef;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #6c757d;
+    font-size: 0.875rem;
+    transition: all 0.3s ease;
+}
+
+.milestone.completed .milestone-icon {
+    background: linear-gradient(135deg, #2E7D5A 0%, #4ade80 100%);
+    color: white;
+}
+
+.milestone-label {
+    font-size: 0.75rem;
+    color: #6c757d;
+    text-align: center;
+}
+
+.milestone.completed .milestone-label {
+    color: #2E7D5A;
+    font-weight: 500;
+}
+
+/* Journey Card */
+.journey-card {
+    background: white;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+/* Assessment Progress Card */
+.assessment-progress-card {
+    background: #fffbeb;
+    border-radius: 8px;
+    padding: 16px;
+}
+
+@media (max-width: 768px) {
+    .journey-milestones {
+        flex-wrap: wrap;
+        gap: 16px;
+        justify-content: center;
+    }
+
+    .journey-milestones::before {
+        display: none;
+    }
+
+    .milestone {
+        width: 60px;
+    }
+}
+</style>
 
 <?php require_once 'includes/footer-dashboard.php'; ?>
